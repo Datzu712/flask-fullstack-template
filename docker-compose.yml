@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: "dockerfile"
+    restart: always
+    ports:
+      - "8080:80"
+
+  db:
+    image: mysql:5.7
+    container_name: mysql_db
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: db
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    ports:
+      - "4414:3306"
+
+volumes:
+  db_data:
