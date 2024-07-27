@@ -1,0 +1,11 @@
+flask
+SQLAlchemy
+flask_sqlalchemy
+PyMySQL
+python-dotenv
+gunicorn
+Flask-Minify
+Flask-Minify[go]
+flask-redis
+flask-cors
+cryptography
