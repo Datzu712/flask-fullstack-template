@@ -4,15 +4,16 @@ FLASK_ENV=development
 FLASK_RUN_PORT=8080
 FLASK_RUN_HOST=0.0.0.0
 
-REDIS_URL=redis://usr:passw@redis:6379/0
-# Redis conf for docker (you can keep it blank if you are not using docker)
-REDIS_USERNAME=usr
-REDIS_PASSWORD=passw
-REDIS_PORT=6379
-
-# Mysql conf
-MYSQL_HOST=
-MYSQL_USER=
-MYSQL_PASSWORD=
-MYSQL_DB=
+MYSQL_URL=mysql+pymysql://admin:root@mysql:3306/uni
+# Mysql conf for docker (you can leave it blank if you are not using docker)
+MYSQL_USERNAME=admin
+MYSQL_PASSWORD=root
+MYSQL_HOST=mysql
 MYSQL_PORT=3306
+MYSQL_DATABASE=uni
+
+REDIS_URL=redis://admin:root@redis:6379/0
+# Redis conf for docker (you can leave it blank if you are not using docker)
+REDIS_USERNAME=admin
+REDIS_PASSWORD=root
+REDIS_PORT=6379

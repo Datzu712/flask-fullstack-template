@@ -9,23 +9,32 @@ services:
     env_file:
       - .flaskenv
     ports:
-      - "8080:8080"
+      - "${FLASK_RUN_PORT}:${FLASK_RUN_PORT}"
     depends_on:
-      - redis
-      - mysql
+      mysql:
+        condition: service_healthy
 
   mysql:
     image: mysql:latest
-    container_name: db
+    restart: always
+    env_file:
+      - .flaskenv
     volumes:
-      - db_data:/var/lib/mysql
+      #- db_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_ROOT_PASSWORD: "{MYSQL_PASSWORD}"
-      MYSQL_DATABASE: "{MYSQL_DATABASE}"
-      MYSQL_USER: "{MYSQL_USER}"
-      MYSQL_PASSWORD: "{MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USERNAME}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
     ports:
-      - "{MYSQL_PORT}:3306"
+      - "${MYSQL_PORT}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 0s
 
   redis:
     image: "redis/redis-stack:latest"
@@ -37,5 +46,5 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
 
-volumes:
-  db_data:
+#volumes:
+#  db_data:
