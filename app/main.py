@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask_minify import Minify
 from flask_cors import CORS
 
+from .controllers.dashboard import dashboard_bp
 from .extensions import db, redis_client
 
 load_dotenv('.flaskenv')
@@ -15,11 +16,12 @@ def create_app():
     app = Flask(
         __name__,
         template_folder=path.join(project_path, 'templates'),
-        views_folder=path.join(project_path, 'views'),
         static_folder=path.join(project_path, 'static'),
         static_url_path='/static',
     )
     CORS(app)
+
+    app.register_blueprint(dashboard_bp)
 
     Minify(app=app, html=True, js=True, cssless=True, go=True, static=True)
 
