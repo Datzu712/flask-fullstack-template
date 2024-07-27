@@ -4,23 +4,28 @@ services:
   app:
     build:
       context: .
-      dockerfile: "dockerfile"
+      dockerfile: "Dockerfile"
     restart: always
+    env_file:
+      - .flaskenv
     ports:
-      - "8080:80"
+      - "8080:8080"
+    depends_on:
+      - redis
+      - mysql
 
-  db:
+  mysql:
     image: mysql:latest
     container_name: db
     volumes:
       - db_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: db
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: "{MYSQL_PASSWORD}"
+      MYSQL_DATABASE: "{MYSQL_DATABASE}"
+      MYSQL_USER: "{MYSQL_USER}"
+      MYSQL_PASSWORD: "{MYSQL_PASSWORD}"
     ports:
-      - "3306:3306"
+      - "{MYSQL_PORT}:3306"
 
   redis:
     image: "redis/redis-stack:latest"
@@ -30,7 +35,7 @@ services:
     environment:
       REDIS_ARGS: "--requirepass ${REDIS_PASSWORD} --user ${REDIS_USERNAME} on >${REDIS_PASSWORD} ~* allcommands --user default off nopass nocommands"
     ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+      - "${REDIS_PORT}:6379"
 
 volumes:
   db_data:
