@@ -10,8 +10,8 @@ services:
       - "8080:80"
 
   db:
-    image: mysql:5.7
-    container_name: mysql_db
+    image: mysql:latest
+    container_name: db
     volumes:
       - db_data:/var/lib/mysql
     environment:
@@ -20,7 +20,17 @@ services:
       MYSQL_USER: test
       MYSQL_PASSWORD: test
     ports:
-      - "4414:3306"
+      - "3306:3306"
+
+  redis:
+    image: "redis/redis-stack:latest"
+    restart: always
+    env_file:
+      - .flaskenv
+    environment:
+      REDIS_ARGS: "--requirepass ${REDIS_PASSWORD} --user ${REDIS_USERNAME} on >${REDIS_PASSWORD} ~* allcommands --user default off nopass nocommands"
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
 
 volumes:
   db_data:
