@@ -15,6 +15,7 @@ def create_app():
     app = Flask(
         __name__,
         template_folder=path.join(project_path, 'templates'),
+        views_folder=path.join(project_path, 'views'),
         static_folder=path.join(project_path, 'static'),
         static_url_path='/static',
     )
