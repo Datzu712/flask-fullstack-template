@@ -1,9 +1,27 @@
-# coding: utf-8
+from datetime import date, datetime
+from decimal import Decimal
 from sqlalchemy import Column, String, TIMESTAMP, text
 from sqlalchemy.dialects.mysql import INTEGER, TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+class Base(declarative_base()):
+    __abstract__ = True
+
+    def as_dict(self):
+        result = {}
+        for c in self.__table__.columns:
+            value = getattr(self, c.name)
+            if not value:
+                continue
+
+            if isinstance(value, (date, datetime)):
+                result[c.name] = value.isoformat()
+            elif isinstance(value, Decimal):
+                result[c.name] = str(value)
+            else:
+                result[c.name] = value
+        return result
+
 metadata = Base.metadata
 
 

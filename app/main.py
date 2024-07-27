@@ -1,10 +1,9 @@
-from flask import Flask, request, Response
+from flask import Flask
 from os import path, environ
 from sqlalchemy import text
 from dotenv import load_dotenv
 from flask_minify import Minify
 from flask_cors import CORS
-from werkzeug.exceptions import Unauthorized
 
 from .extensions import db, redis_client
 
