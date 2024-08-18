@@ -16,4 +16,4 @@ def view():
 
     users = db.session.query(User).all()
 
-    return render_template('views/users.html', active='users', data=users)
+    return render_template('views/users.html', active='users', data=[u.as_dict() for u in users])

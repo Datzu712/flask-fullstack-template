@@ -1,10 +1,10 @@
 function showErrorModal(message, title = 'An error occurred') {
     const modalElement = document.getElementById('statusErrorsModal');
     if (!modalElement || modalElement.classList.contains('show')) {
+        console.debug('Error modal already shown');
         return;
     }
-    const errorModal = new bootstrap.Modal(modalElement);
-    console.log
+    const errorModal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
 
     document.getElementById('errorModalDescription').innerText = message;
     document.getElementById('errorModalTitleError').innerText = title;
