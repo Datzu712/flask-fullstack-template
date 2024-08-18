@@ -14,7 +14,7 @@
                             </a>
                         </div>
                         <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Create your account</h2>
-                        <form action="#!" class="needs-validation" novalidate>
+                        <form action="post" class="needs-validation" novalidate id="registerForm">
                             <div class="row gy-2 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
@@ -68,4 +68,46 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const data = {
+            username: formData.get('username'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+        };
+        console.log(data)
+        if (data.password !== formData.get('confirm_password')) {
+            showErrorModal('Passwords do not match.', 'Please try again.');
+            return;
+        }
+
+        fetch("{{ url_for('api.auth.register') }}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then((res) => {
+            if (!res.ok) {
+                throw new Error('An error occurred while processing your request.');
+            }
+            const modalElement = document.getElementById('statusSuccessModal');
+            const successModal = new bootstrap.Modal(modalElement);
+
+            modalElement.addEventListener('hidden.bs.modal', function() {
+                window.location.href = "{{ url_for('app.auth.login') }}";
+            });
+            successModal.show();
+        }).catch((error) => {
+            console.error(error);
+            showErrorModal(`Couldn't create a user. Probably that email already exists!`, 'Please try again later.');
+        });
+    });
+</script>
 {% endblock %}

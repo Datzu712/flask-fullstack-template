@@ -1,7 +1,8 @@
-from flask import request, jsonify, redirect, url_for
+from flask import request, jsonify, redirect, url_for, session
 from functools import wraps
 from os import environ
 import jwt
+from werkzeug.exceptions import Forbidden
 
 from ..extensions import db, redis_client
 from ..database.models import User
@@ -9,25 +10,25 @@ from ..database.models import User
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.cookies.get('token')
+        token = session.get('access_token')
         if not token:
-            return redirect(url_for('app.auth.login'))
+            raise Forbidden()
 
         try:
             data = jwt.decode(token, environ.get('SECRET_KEY'), algorithms=['HS256'])
-            current_user = db.session.query(User).filter_by(id=data['user_id']).first()
+            current_user = db.session.query(User).filter_by(id=data['userId']).first()
 
             if not current_user:
                 return jsonify({ 'message': 'Forbidden' }), 403
             
-            cached_session = redis_client.get(f'{current_user.id}:session')
+            cached_session = redis_client.get(f'sessions:{current_user.id}').decode('utf-8')
             if not cached_session or cached_session != token:
-                return jsonify({ 'message': 'Forbidden' }), 403
+                raise Forbidden()
             
-            # reset token ttl
-            redis_client.setex(f'{current_user.id}:session', 900, token)
-        except:
-            return jsonify({'message': 'Token is invalid!'}), 403
+            redis_client.setex(f'sessions:{current_user.id}', 900, token)
+        except Exception as e:
+            print(e)
+            return Forbidden()
 
         return f(current_user, *args, **kwargs)
     return decorated

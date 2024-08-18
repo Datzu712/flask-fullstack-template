@@ -11,3 +11,13 @@ function showErrorModal(message, title = 'An error occurred') {
 
     errorModal.show();
 }
+
+function showSuccessModal() {
+    const modalElement = document.getElementById('statusSuccessModal');
+    if (!modalElement || modalElement.classList.contains('show')) {
+        return;
+    }
+    const successModal = new bootstrap.Modal(modalElement);
+
+    successModal.show();
+}

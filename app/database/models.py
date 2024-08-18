@@ -49,13 +49,13 @@ class User(Base):
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
     updated_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
 
-    def set_password(self, plain_password):
+    def set_password(self, plain_password: str):
             self.password = bcrypt.hashpw(
                 plain_password.encode('utf-8'), 
                 bcrypt.gensalt()
             ).decode('utf-8')
 
-    def check_password(self, plain_password):
+    def check_password(self, plain_password: str):
         return bcrypt.checkpw(plain_password.encode('utf-8'), self.password.encode('utf-8'))
 
 # testing

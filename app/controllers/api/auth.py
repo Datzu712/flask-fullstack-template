@@ -1,8 +1,7 @@
-from flask import blueprints, request, make_response, redirect, url_for, jsonify
+from flask import blueprints, request, make_response, redirect, url_for, jsonify, session
 from jwt import encode, decode
 from os import environ
-from werkzeug.exceptions import Forbidden
-from json import dumps
+from uuid import uuid4
 from datetime import datetime
 
 from ...extensions import db, redis_client
@@ -36,7 +35,38 @@ def login():
     )
     redis_client._redis_client.setex(f'sessions:{user.id}', 900, token)
 
-    response = make_response(redirect(url_for('dashboard')))
-    response.set_cookie('token', token, httponly=True, secure=True)
+    session['access_token'] = token
+
+    return jsonify({'message': 'Logged in successfully'}), 201
+
+@auth_bp.route('/logout', methods=['POST'])
+def logout():
+    token = request.cookies.get('token')
+    if not token:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    payload = decode(token, environ.get('SECRET_KEY'), algorithms=['HS256'])
+    redis_client._redis_client.delete(f'sessions:{payload.get("userId")}')
+
+    response = make_response(redirect(url_for('home')))
+    response.delete_cookie('token')
 
     return response
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    name = data.get('username')
+
+    if db.session.query(User).filter(User.email == email).first():
+        return jsonify({'error': 'User already exists'}), 400
+
+    user = User(email=email, name=name)
+    user.id = str(uuid4())
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'message': 'User created successfully'}), 201
