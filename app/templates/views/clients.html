@@ -68,9 +68,9 @@
     </div>
 </div>
 
-
 <script>
     const clientsData = {{ data | tojson }};
+    let currentEditingClient = null;
     const form = document.getElementById('clientForm');
     const clientDT = new DataTable('#clients-dt', {
         data: clientsData,
@@ -92,6 +92,27 @@
             { data: 'email' },
             { data: 'phone' },
             { data: 'address' },
+            {
+                orderable: false,
+                data: null,
+                render: function() {
+                    return `
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button id="editButton" class="dropdown-item">Edit</button></li>
+                                <!-- <li><button id="reasignButton" class="dropdown-item">Give access</button></li> -->
+                                <li><hr class="dropdown-divider"></li>
+                                <li><button id="deleteButton" class="dropdown-item">Delete</button></li>
+                            </ul>
+                        </div>
+                    `;
+                },
+                targets: -1,
+                width: '1%',
+            },
         ],
         layout: {
             top: function() {
@@ -114,6 +135,8 @@
         inputs.forEach(input => {
            input.value = '';
         });
+
+        currentEditingClient = null;
     });
 
     form.addEventListener('submit', function(event) {
@@ -129,8 +152,9 @@
                 phone: document.getElementById('inputPhone').value,
                 address: document.getElementById('inputAddress').value
             };
-            fetch('{{ url_for("api.clients_api.create") }}', {
-                method: 'POST',
+            console.log(currentEditingClient)
+            fetch('/api/clients' + (currentEditingClient ? `/${currentEditingClient.id}` : '') , {
+                method: currentEditingClient ? 'PATCH' : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -140,17 +164,76 @@
                     console.error(res);
                     throw new Error('Error al crear el cliente');
                 }
-                clientsData.push(newClient);
+                if (currentEditingClient) {
+                    const index = clientsData.findIndex(client => client.id === currentEditingClient.id);
+                    clientsData[index] = newClient;
+                } else {
+                    clientsData.push(newClient);
+                }
                 clientDT.clear().rows.add(clientsData).draw();
 
                 const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
                 modal.hide();
             }).catch((error) => {
                 console.error(error);
-                showErrorModal('An error occurred while creating the client', 'Error');
+                showErrorModal(`An error occurred while ${currentEditingClient ? 'creating' : 'editing'} the client`, 'Error');
+            }).finally(() => {
+                currentEditingClient = null;
             });
         }
         form.classList.add('was-validated');
+    });
+
+    document.querySelector('#clients-dt tbody').addEventListener('click', function(event) {
+        const d = clientDT.row(event.target.closest('tr')).data();
+
+        switch (event.target.id) {
+            case 'editButton':
+                console.log('Edit', d);
+
+                currentEditingClient = d;
+
+                document.getElementById('inputName').value = d.name;
+                document.getElementById('inputEmail').value = d.email;
+                document.getElementById('inputPhone').value = d.phone;
+                document.getElementById('inputAddress').value = d.address;
+
+                modal.show();
+                break;
+            case 'reasignButton':
+                break;
+            case 'deleteButton':
+                const clientId = d.id;
+
+                createQuestion({
+                    title: 'Are you sure?',
+                    text: `Are you sure you want to delete the client "${clientId}"? This action cannot be undone.`,
+                    confirmButtonText: 'Yes, I\'m sure',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: 'danger',
+                    afterConfirm: () => {
+                        return fetch('/api/clients/' + clientId, {
+                            method: 'DELETE',
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                response.json().then(({ message }) => {
+                                    showErrorModal(message, 'danger');
+                                });
+                            }
+                            showSuccessModal('Removed client successful!');
+
+                            const index = clientsData.findIndex((client) => clientId === client.id);
+                            clientsData.splice(index, 1);
+                            clientDT.clear().rows.add(clientsData).draw();
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                    },
+                });
+                break;
+        }
     });
 </script>
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, g
 from json import dumps
 from uuid import uuid4
+from sqlalchemy import or_
 
 from ...decorators.require_auth import token_required
 from ...extensions import db
@@ -19,6 +20,13 @@ def create():
         address=data['address'],
         id=str(uuid4())
     )
+
+    already_exists = db.session.query(Client).filter(
+        or_(Client.email == client.email, Client.phone == client.phone)
+    ).first()
+    if already_exists:
+        return dumps({'error': 'Client already exists'}), 400
+
     db.session.add(client)
     db.session.commit()
     db.session.flush()
@@ -32,9 +40,9 @@ def create():
     
     return dumps(client.as_dict())
 
-@clients_api_bp.route('/<int:client_id>', methods=['PATCH'])
+@clients_api_bp.route('/<client_id>', methods=['PATCH'])
 @token_required
-def update(client_id: int):
+def update(client_id):
     data = request.get_json()
 
     client = None
@@ -58,9 +66,9 @@ def update(client_id: int):
 
     return dumps(client.as_dict())
 
-@clients_api_bp.route('/<int:client_id>', methods=['DELETE'])
+@clients_api_bp.route('/<client_id>', methods=['DELETE'])
 @token_required
-def delete(client_id: int):
+def delete(client_id):
 
     client = None
     if g.current_user.admin:
@@ -73,6 +81,8 @@ def delete(client_id: int):
 
     if not client:
         return dumps({'error': 'Client not found'}), 404
+    
+    db.session.query(UserClient).filter(UserClient.client_id == client.id).delete()
     db.session.delete(client)
     db.session.commit()
 
