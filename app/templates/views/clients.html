@@ -153,6 +153,11 @@
                 ...(currentEditingClient ? { id: currentEditingClient.id } : {})
             };
 
+            if (currentEditingClient && Object.keys(newClient).every(key => newClient[key] === currentEditingClient[key])) {
+                showErrorModal('No changes were made', 'warning');
+                return;
+            }
+
             fetch('/api/clients' + (currentEditingClient ? `/${currentEditingClient.id}` : '') , {
                 method: currentEditingClient ? 'PATCH' : 'POST',
                 headers: {
