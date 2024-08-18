@@ -14,30 +14,42 @@
                             </a>
                         </div>
                         <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Create your account</h2>
-                        <form action="#!">
+                        <form action="#!" class="needs-validation" novalidate>
                             <div class="row gy-2 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
                                         <label for="username" class="form-label">Username</label>
+                                        <div class="invalid-feedback">
+                                            Please enter a username.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
                                         <label for="email" class="form-label">Email</label>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid email address.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
                                         <label for="password" class="form-label">Password</label>
+                                        <div class="invalid-feedback">
+                                            Please enter a password.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
                                         <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
                                         <label for="confirm_password" class="form-label">Confirm Password</label>
+                                        <div class="invalid-feedback">
+                                            Please confirm your password.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12">
