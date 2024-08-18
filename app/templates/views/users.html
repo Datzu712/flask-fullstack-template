@@ -1,0 +1,71 @@
+{% extends "base_layout.html" %}
+
+{% block content %}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Clientes</h3>
+            <table id="clients-dt" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Agregar un cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="clientForm" method="post" novalidate>
+                    <div class="col-md-4">
+                        <label for="inputName" class="form-label">Nombre del cliente</label>
+                        <input id="inputName" type="text" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese el nombre del cliente.
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="inputEmail" class="form-label">Email</label>
+                        <input id="inputEmail" type="email" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese un email válido.
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="inputPhone" class="form-label">Teléfono</label>
+                        <input id="inputPhone" type="text" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese el teléfono del cliente.
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputAddress" class="form-label">Dirección</label>
+                        <input id="inputAddress" type="text" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese la dirección del cliente.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" form="clientForm" id="addButton">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
