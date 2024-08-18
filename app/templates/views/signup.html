@@ -1,0 +1,113 @@
+{% extends "public_layout.html" %}
+
+{% block content %}
+<!-- Sign Up - Bootstrap Brain Component -->
+<section class="py-3 py-md-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+                <div class="card border border-light-subtle rounded-3 shadow-sm">
+                    <div class="card-body p-3 p-md-4 p-xl-5">
+                        <div class="text-center mb-3">
+                            <a href="#!">
+                                <img src="{{ url_for('static', filename='img/favicon.ico') }}" alt="For Life S.A Logo" width="50" height="50">
+                            </a>
+                        </div>
+                        <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Create your account</h2>
+                        <form action="post" class="needs-validation" novalidate id="registerForm">
+                            <div class="row gy-2 overflow-hidden">
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                                        <label for="username" class="form-label">Username</label>
+                                        <div class="invalid-feedback">
+                                            Please enter a username.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                                        <label for="email" class="form-label">Email</label>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid email address.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                                        <label for="password" class="form-label">Password</label>
+                                        <div class="invalid-feedback">
+                                            Please enter a password.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+                                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                                        <div class="invalid-feedback">
+                                            Please confirm your password.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid my-3">
+                                        <button class="btn btn-primary btn-lg" type="submit">Sign up</button>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <p class="m-0 text-secondary text-center">Already have an account? <a href="{{ url_for('app.auth.login') }}" class="link-primary text-decoration-none">Log in</a></p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const data = {
+            username: formData.get('username'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+        };
+        console.log(data)
+        if (data.password !== formData.get('confirm_password')) {
+            showErrorModal('Passwords do not match.', 'Please try again.');
+            return;
+        }
+
+        fetch("{{ url_for('api.auth.register') }}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then((res) => {
+            if (!res.ok) {
+                throw new Error('An error occurred while processing your request.');
+            }
+            const modalElement = document.getElementById('statusSuccessModal');
+            const successModal = new bootstrap.Modal(modalElement);
+
+            modalElement.addEventListener('hidden.bs.modal', function() {
+                window.location.href = "{{ url_for('app.auth.login') }}";
+            });
+            successModal.show();
+        }).catch((error) => {
+            console.error(error);
+            showErrorModal(`Couldn't create a user. Probably that email already exists!`, 'Please try again later.');
+        });
+    });
+</script>
+{% endblock %}

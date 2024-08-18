@@ -3,6 +3,7 @@ from decimal import Decimal
 from sqlalchemy import Column, String, TIMESTAMP, text
 from sqlalchemy.dialects.mysql import INTEGER, TINYINT
 from sqlalchemy.ext.declarative import declarative_base
+import bcrypt
 
 class Base(declarative_base()):
     __abstract__ = True
@@ -47,3 +48,21 @@ class User(Base):
     admin = Column(TINYINT(1), nullable=False, server_default=text("0"))
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
     updated_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
+
+    def set_password(self, plain_password: str):
+            self.password = bcrypt.hashpw(
+                plain_password.encode('utf-8'), 
+                bcrypt.gensalt()
+            ).decode('utf-8')
+
+    def check_password(self, plain_password: str):
+        return bcrypt.checkpw(plain_password.encode('utf-8'), self.password.encode('utf-8'))
+
+# testing
+if __name__ == "__main__":
+    user = User()
+    user.set_password("testpass")
+
+    # Verificamos la contraseña
+    print(user.check_password("testpass"))
+    print(user.check_password("wrongpassword")) 

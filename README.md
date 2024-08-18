@@ -5,13 +5,13 @@
 2. [Installation](#installation)
     1. [Local setup](#local-setup)
     2. [Docker setup](#docker-setup)
+3. [Author](#author)
 
 ## Tech Stack
 - [Flask](https://flask.palletsprojects.com/en/3.0.x/)
 - [Redis](https://redis.io/es/)
 - [MySQL](https://www.mysql.com/)
 - [Docker/docker compose](https://www.docker.com/)
-- [Swagger](https://swagger.io/) (todo)
 - [SqlAlchemy](https://www.sqlalchemy.org/)
 - MVC Architecture
 - LAMP Stack
@@ -85,3 +85,6 @@ docker compose --env-file .flaskenv up
 ```bash
 docker compose --env-file .flaskenv down
 ```
+
+## Author
+- [Datzu712](https://github.com/Datzu712/)

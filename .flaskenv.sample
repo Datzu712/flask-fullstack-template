@@ -17,3 +17,5 @@ REDIS_URL=redis://admin:root@redis:6379/0
 REDIS_USERNAME=admin
 REDIS_PASSWORD=root
 REDIS_PORT=6379
+
+SECRET_KEY=secret

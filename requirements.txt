@@ -9,3 +9,5 @@ Flask-Minify[go]
 flask-redis
 flask-cors
 cryptography
+pyjwt
+bcrypt

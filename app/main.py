@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 from flask_minify import Minify
 from flask_cors import CORS
 
-from .controllers.dashboard import dashboard_bp
+from .controllers import app_bp
+from .controllers.api import api_bp
 from .extensions import db, redis_client
 
 load_dotenv('.flaskenv')
@@ -21,7 +22,8 @@ def create_app():
     )
     CORS(app)
 
-    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(app_bp)
+    app.register_blueprint(api_bp)
 
     Minify(app=app, html=True, js=True, cssless=True, go=True, static=True)
 
@@ -31,6 +33,7 @@ def create_app():
         'pool_pre_ping': True
     }
     app.config['REDIS_URL'] = environ.get('REDIS_URL')
+    app.config['SECRET_KEY'] = environ.get('SECRET_KEY')
 
     db.init_app(app)
     redis_client.init_app(app)
