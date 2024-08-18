@@ -3,33 +3,154 @@
 {% block content %}
 
 <div class="col-md-12">
-	<div class="card">
-		<div class="card-body">
-			<h3 class="card-title">Clientes</h3>
-			<table id="clients-dt" class="table table-striped table-bordered">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Email</th>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Clientes</h3>
+            <table id="clients-dt" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-	</div>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Agregar dosimetro INSTADOSE a un trabajador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="clientForm" method="post" novalidate>
+                    <div class="col-md-4">
+                        <label for="inputName" class="form-label">Nombre del cliente</label>
+                        <input id="inputName" type="text" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese el nombre del cliente.
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="inputEmail" class="form-label">Email</label>
+                        <input id="inputEmail" type="email" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese un email válido.
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="inputPhone" class="form-label">Teléfono</label>
+                        <input id="inputPhone" type="text" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese el teléfono del cliente.
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputAddress" class="form-label">Dirección</label>
+                        <input id="inputAddress" type="text" class="form-control" autocomplete="on" required/>
+                        <div class="invalid-feedback">
+                            Por favor ingrese la dirección del cliente.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" form="clientForm" id="addButton">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     const clientsData = {{ data | tojson }};
+    const form = document.getElementById('clientForm');
     const clientDT = new DataTable('#clients-dt', {
         data: clientsData,
+        responsive: true,
+        autoWidth: true,
+        language: {
+            sProcessing: "Processing...",
+            sLengthMenu: "Showing _MENU_ clients",
+            sZeroRecords: "No clients found",
+            sEmptyTable: "No data available in this table",
+            sInfo: "Showing clients from _START_ to _END_ (of _TOTAL_)",
+            sInfoEmpty: "Empty table",
+            sInfoFiltered: "",
+            sSearch: "Search:",
+            sLoadingRecords: "Loading...",
+        },
         columns: [
             { data: 'name' },
             { data: 'email' },
             { data: 'phone' },
-            { data: 'address' }
-        ]
+            { data: 'address' },
+        ],
+        layout: {
+            top: function() {
+                const div = document.createElement('div');
+                div.innerHTML = `<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addClientModal">Agregar Cliente</button>`;
+                return div;
+            }
+        }
+    });
+
+    const modal = new bootstrap.Modal(document.getElementById('addClientModal'), {
+        keyboard: false
+    });
+    modal._element.addEventListener('hidden.bs.modal', function() {
+        const form = document.getElementById('clientForm');
+        form.classList.remove('was-validated');
+        form.reset();
+
+        const inputs = form.querySelectorAll('input');
+        inputs.forEach(input => {
+           input.value = '';
+        });
+    });
+
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.preventDefault();
+
+            const newClient = {
+                name: document.getElementById('inputName').value,
+                email: document.getElementById('inputEmail').value,
+                phone: document.getElementById('inputPhone').value,
+                address: document.getElementById('inputAddress').value
+            };
+            fetch('{{ url_for("api.clients_api.create") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newClient)
+            }).then((res) => {
+                if (!res.ok) {
+                    console.error(res);
+                    throw new Error('Error al crear el cliente');
+                }
+                clientsData.push(newClient);
+                clientDT.clear().rows.add(clientsData).draw();
+
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal'));
+                modal.hide();
+            }).catch((error) => {
+                console.error(error);
+                showErrorModal('An error occurred while creating the client', 'Error');
+            });
+        }
+        form.classList.add('was-validated');
     });
 </script>
 {% endblock %}
