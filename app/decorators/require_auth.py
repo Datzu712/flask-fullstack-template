@@ -25,7 +25,7 @@ def token_required(f):
             if not cached_session or cached_session != token:
                 raise Forbidden()
             
-            redis_client.setex(f'sessions:{current_user.id}', 900, token)
+            redis_client.setex(f'sessions:{current_user.id}', 1800, token) # reset token ttl
         except Exception as e:
             print(e)
             return Forbidden()

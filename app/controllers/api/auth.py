@@ -33,7 +33,7 @@ def login():
         environ.get('SECRET_KEY'), 
         algorithm='HS256'
     )
-    redis_client._redis_client.setex(f'sessions:{user.id}', 900, token)
+    redis_client._redis_client.setex(f'sessions:{user.id}', 1800, token)
 
     session['access_token'] = token
 
@@ -41,17 +41,16 @@ def login():
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
-    token = request.cookies.get('token')
+    token = session.get('access_token')
     if not token:
         return jsonify({'error': 'Unauthorized'}), 401
 
     payload = decode(token, environ.get('SECRET_KEY'), algorithms=['HS256'])
     redis_client._redis_client.delete(f'sessions:{payload.get("userId")}')
 
-    response = make_response(redirect(url_for('home')))
-    response.delete_cookie('token')
+    session.pop('access_token', None)
 
-    return response
+    return jsonify({'message': 'Logged out successfully'}), 201
 
 @auth_bp.route('/register', methods=['POST'])
 def register():

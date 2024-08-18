@@ -25,5 +25,5 @@ def view(current_user):
     return render_template('views/dashboard.html', data = {
         'mysql': mysql_latency_ms,
         'redis': redis_latency_ms,
-        'username': current_user.name
-    })
+        'username': current_user.name,
+    }, active='dashboard')

@@ -48,12 +48,18 @@
         <script src="https://cdn.datatables.net/colreorder/2.0.3/js/dataTables.colReorder.min.js"></script>
         <script src="https://cdn.datatables.net/colreorder/2.0.3/js/colReorder.bootstrap5.min.js"></script>
 
+        <!-- mdb -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/mdb.min.css') }}"></link>
+        <script type="module"  src="{{ url_for('static', filename='js/mdb.es.min.js') }}"></script>
+
 
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     </head>
-    <body class=" d-flex flex-column bg-white">
-        <div class="page">
-            <div class="content-page">
+    <body class=" d-flex flex-column bg-light">
+        {% include 'header.html' %}
+
+        <main class="page" style="margin-top: 58px;">
+            <div class="content-page container pt-4">
                 {% block content %}{% endblock %}
                 <!-- Confirm modal for other views (not this one) -->
                 <div class="modal fade" tabindex="-1" id="confirmModal">
@@ -90,7 +96,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
         {% block scripts %}{% endblock %}
     </body>
 </html>
