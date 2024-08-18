@@ -1,4 +1,4 @@
-from flask import request, jsonify, session, g
+from flask import jsonify, session, g, redirect, request, url_for
 from functools import wraps
 from os import environ
 import jwt
@@ -12,7 +12,10 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = session.get('access_token')
         if not token:
-            raise Forbidden()
+            if request.method == 'GET':
+                return redirect(url_for('app.auth.login'))
+            else:
+                raise Forbidden()
 
         try:
             data = jwt.decode(token, environ.get('SECRET_KEY'), algorithms=['HS256'])
@@ -29,7 +32,10 @@ def token_required(f):
             redis_client.setex(f'sessions:{current_user.id}', 1800, token) # reset token ttl
         except Exception as e:
             print(e)
-            return Forbidden()
+            if request.method == 'GET':
+                return redirect(url_for('app.auth.login'))
+            else:
+                raise Forbidden()
 
         return f(*args, **kwargs)
     return decorated

@@ -25,7 +25,7 @@ def create():
         or_(Client.email == client.email, Client.phone == client.phone)
     ).first()
     if already_exists:
-        return dumps({'error': 'Client already exists'}), 400
+        return dumps({'message': 'Client already exists'}), 400
 
     db.session.add(client)
     db.session.commit()
@@ -55,7 +55,7 @@ def update(client_id):
         ).first()
 
     if not client:
-        return dumps({'error': 'Client not found'}), 404
+        return dumps({'message': 'Client not found'}), 404
 
     client.name = data['name']
     client.email = data['email']
@@ -80,7 +80,7 @@ def delete(client_id):
         ).first()
 
     if not client:
-        return dumps({'error': 'Client not found'}), 404
+        return dumps({'message': 'Client not found'}), 404
     
     db.session.query(UserClient).filter(UserClient.client_id == client.id).delete()
     db.session.delete(client)
