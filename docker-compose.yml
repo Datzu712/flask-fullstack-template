@@ -8,11 +8,20 @@ services:
     restart: always
     env_file:
       - .flaskenv
-    ports:
-      - "${FLASK_RUN_PORT}:${FLASK_RUN_PORT}"
     depends_on:
       mysql:
         condition: service_healthy
+
+  # FLASK_RUN_PORT SHOULD BE 5000 FOR COMPOSE DEPLOYMENT
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "81:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
 
   mysql:
     image: mysql:latest

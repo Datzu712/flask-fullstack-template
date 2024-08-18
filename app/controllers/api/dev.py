@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 import faker
 from uuid import uuid4
 
@@ -9,7 +9,14 @@ dev_bp = Blueprint('dev', __name__, url_prefix='/dev')
 
 @dev_bp.route('/ping', methods=['GET'])
 def ping():
-    return 'pong'
+    real_ip = request.headers.get('X-Real-IP')
+    forwarded_for = request.headers.get('X-Forwarded-For')
+    
+    # Si no se encuentra la IP real, usar la IP remota
+    client_ip = real_ip or forwarded_for or request.remote_addr
+    print(request.remote_addr, real_ip, forwarded_for)
+    
+    return f"Hello, World! Your IP is {client_ip}!"
 
 @dev_bp.route('/faker', methods=['GET'])
 def health():
