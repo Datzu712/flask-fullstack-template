@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.37, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
 --
 -- Host: 0.0.0.0    Database: uni
 -- ------------------------------------------------------
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `client`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client` (
   `id` varchar(36) NOT NULL COMMENT 'UUIDV4',
-  `name` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `phone` varchar(48) NOT NULL,
   `address` varchar(504) DEFAULT NULL,
@@ -43,6 +43,32 @@ CREATE TABLE `client` (
 LOCK TABLES `client` WRITE;
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_clients`
+--
+
+DROP TABLE IF EXISTS `user_clients`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_clients` (
+  `user_id` varchar(36) NOT NULL,
+  `client_id` varchar(36) NOT NULL,
+  PRIMARY KEY (`user_id`,`client_id`),
+  UNIQUE KEY `user_clients_client_id_user_id_uindex` (`client_id`,`user_id`),
+  CONSTRAINT `user_clients_client_id_fk` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+  CONSTRAINT `user_clients_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_clients`
+--
+
+LOCK TABLES `user_clients` WRITE;
+/*!40000 ALTER TABLE `user_clients` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -71,6 +97,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES ('86996e37-9ea6-4ef9-8ba8-869ed381a439','root','root@admin.com','$2b$12$Gn0mpuV8C4I0ABssor8Vquxpp1Viw3XTTJb0SEn5sU6jMFSnwbkni',0,'2024-08-18 17:24:17','2024-08-18 17:24:17');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -83,4 +110,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-27 13:23:16
+-- Dump completed on 2024-08-18 15:47:07
