@@ -9,3 +9,7 @@ def login():
 @auth_bp.route('/forgot-password', methods=['GET'])
 def forgot_password():
     return render_template('views/forgot-password.html')
+
+@auth_bp.route('/singup', methods=['GET'])
+def signup():
+    return render_template('views/signup.html')
