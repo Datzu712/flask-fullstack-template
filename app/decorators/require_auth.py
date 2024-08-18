@@ -1,4 +1,4 @@
-from flask import request, jsonify, redirect, url_for, session
+from flask import request, jsonify, session, g
 from functools import wraps
 from os import environ
 import jwt
@@ -25,10 +25,11 @@ def token_required(f):
             if not cached_session or cached_session != token:
                 raise Forbidden()
             
+            g.current_user = current_user
             redis_client.setex(f'sessions:{current_user.id}', 1800, token) # reset token ttl
         except Exception as e:
             print(e)
             return Forbidden()
 
-        return f(current_user, *args, **kwargs)
+        return f(*args, **kwargs)
     return decorated

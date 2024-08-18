@@ -1,8 +1,9 @@
 from datetime import date, datetime
 from decimal import Decimal
-from sqlalchemy import Column, String, TIMESTAMP, text
+from sqlalchemy import Column, ForeignKey, String, TIMESTAMP, UniqueConstraint, text
 from sqlalchemy.dialects.mysql import INTEGER, TINYINT
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 import bcrypt
 
 class Base(declarative_base()):
@@ -30,13 +31,15 @@ class Client(Base):
     __tablename__ = 'client'
 
     id = Column(String(36), primary_key=True, comment='UUIDV4')
-    name = Column(INTEGER(11), nullable=False, unique=True)
+    name = Column(String(100), nullable=False, unique=True)
     email = Column(String(100), nullable=False, unique=True)
     phone = Column(String(48), nullable=False)
     address = Column(String(504))
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
     updated_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
 
+    # users that have access to this client
+    user_clients = relationship("UserClient", back_populates="client")
 
 class User(Base):
     __tablename__ = 'users'
@@ -49,6 +52,8 @@ class User(Base):
     created_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
     updated_at = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
 
+    user_clients = relationship("UserClient", back_populates="user")
+
     def set_password(self, plain_password: str):
             self.password = bcrypt.hashpw(
                 plain_password.encode('utf-8'), 
@@ -57,6 +62,20 @@ class User(Base):
 
     def check_password(self, plain_password: str):
         return bcrypt.checkpw(plain_password.encode('utf-8'), self.password.encode('utf-8'))
+
+class UserClient(Base):
+    __tablename__ = 'user_clients'
+
+    user_id = Column(String(36), ForeignKey('users.id'), primary_key=True, nullable=False)
+    client_id = Column(String(36), ForeignKey('client.id'), primary_key=True, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint('client_id', 'user_id', name='user_clients_client_id_user_id_uindex'),
+    )
+
+    # Relationships (optional, if you want to establish ORM relationships)
+    user = relationship("User", back_populates="user_clients")
+    client = relationship("Client", back_populates="user_clients")
 
 # testing
 if __name__ == "__main__":

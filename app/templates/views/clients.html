@@ -1,0 +1,35 @@
+{% extends "base_layout.html" %}
+
+{% block content %}
+
+<div class="col-md-12">
+	<div class="card">
+		<div class="card-body">
+			<h3 class="card-title">Clientes</h3>
+			<table id="clients-dt" class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script>
+    const clientsData = {{ data | tojson }};
+    const clientDT = new DataTable('#clients-dt', {
+        data: clientsData,
+        columns: [
+            { data: 'name' },
+            { data: 'email' },
+            { data: 'phone' },
+            { data: 'address' }
+        ]
+    });
+</script>
+{% endblock %}
