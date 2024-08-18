@@ -9,7 +9,7 @@ MYSQL_URL=mysql+pymysql://admin:root@mysql:3306/uni
 MYSQL_USERNAME=admin
 MYSQL_PASSWORD=root
 MYSQL_HOST=mysql
-MYSQL_PORT=3306
+MYSQL_PORT=3306  # redirect port of docker, mysql inside docker always would be 3306
 MYSQL_DATABASE=uni
 
 REDIS_URL=redis://admin:root@redis:6379/0
