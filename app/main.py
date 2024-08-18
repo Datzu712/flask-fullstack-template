@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask_minify import Minify
 from flask_cors import CORS
 
-from .controllers.dashboard import dashboard_bp
+from .controllers import app_bp
 from .extensions import db, redis_client
 
 load_dotenv('.flaskenv')
@@ -21,7 +21,7 @@ def create_app():
     )
     CORS(app)
 
-    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(app_bp)
 
     Minify(app=app, html=True, js=True, cssless=True, go=True, static=True)
 

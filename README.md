@@ -5,6 +5,7 @@
 2. [Installation](#installation)
     1. [Local setup](#local-setup)
     2. [Docker setup](#docker-setup)
+3. [Author](#author)
 
 ## Tech Stack
 - [Flask](https://flask.palletsprojects.com/en/3.0.x/)
@@ -85,3 +86,6 @@ docker compose --env-file .flaskenv up
 ```bash
 docker compose --env-file .flaskenv down
 ```
+
+## Author
+- [Datzu712](https://github.com/Datzu712/)
