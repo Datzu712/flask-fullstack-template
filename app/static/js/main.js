@@ -1,14 +1,13 @@
-function displayAlert(message, type) {
-    const alert = document.getElementById('errorModal');
-    if (!alert) {
-        console.error('Alert element not found');
+function showErrorModal(message, title = 'An error occurred') {
+    const modalElement = document.getElementById('statusErrorsModal');
+    if (!modalElement || modalElement.classList.contains('show')) {
         return;
     }
-    alert.classList.remove('d-none');
-    alert.classList.add(`alert-${type}`);
-    alert.innerHTML = message;
-    setTimeout(() => {
-        alert.classList.add('d-none');
-        alert.classList.remove(`alert-${type}`);
-    }, 8000);
+    const errorModal = new bootstrap.Modal(modalElement);
+    console.log
+
+    document.getElementById('errorModalDescription').innerText = message;
+    document.getElementById('errorModalTitleError').innerText = title;
+
+    errorModal.show();
 }

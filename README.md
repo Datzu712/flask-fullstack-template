@@ -12,7 +12,6 @@
 - [Redis](https://redis.io/es/)
 - [MySQL](https://www.mysql.com/)
 - [Docker/docker compose](https://www.docker.com/)
-- [Swagger](https://swagger.io/) (todo)
 - [SqlAlchemy](https://www.sqlalchemy.org/)
 - MVC Architecture
 - LAMP Stack

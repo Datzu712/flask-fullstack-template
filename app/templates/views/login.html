@@ -14,7 +14,7 @@
                             </a>
                         </div>
                         <h2 class="fs-6 fw-normal text-center text-secondary mb-4">Sign in to your account</h2>
-                        <form action="#!" class="needs-validation" novalidate>
+                        <form action="{{ url_for('api.auth.login') }}" method="post" class="needs-validation" novalidate id="loginForm">
                             <div class="row gy-2 overflow-hidden">
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
@@ -61,4 +61,45 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('loginForm');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            if (!form.checkValidity()) {
+                event.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // Obtén los datos del formulario
+            const formData = new FormData(form);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                rememberMe: formData.get('rememberMe') === 'on'
+            };
+            fetch(`{{ url_for('api.auth.login') }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(res);
+                }
+                window.location.href = '/';
+            })
+            .catch((error) => {
+                console.error(error);
+                showErrorModal('The email or password is incorrect.', 'Credentials error');
+            });
+        });
+    });
+</script>
 {% endblock %}
