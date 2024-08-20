@@ -34,6 +34,9 @@ def create_app():
     }
     app.config['REDIS_URL'] = environ.get('REDIS_URL')
     app.config['SECRET_KEY'] = environ.get('SECRET_KEY')
+    app.context_processor(lambda: {
+        'APP_ENV': environ.get('FLASK_ENV', 'production')
+    })
 
     db.init_app(app)
     redis_client.init_app(app)

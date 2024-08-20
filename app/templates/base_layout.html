@@ -4,6 +4,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
         <title>For Life S.A</title>
 
+        {% if APP_ENV == "production" %}
+            <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    {% endif %}
+
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">

@@ -11,8 +11,6 @@ api_bp.register_blueprint(auth_bp)
 api_bp.register_blueprint(clients_api_bp)
 api_bp.register_blueprint(user_api_bp)
 
-if environ.get('FLASK_ENV') == 'development':
-    from .dev import dev_bp
-    api_bp.register_blueprint(dev_bp)
-else:
-    print('Skipping dev routes')
+
+from .dev import dev_bp
+api_bp.register_blueprint(dev_bp)
