@@ -13,6 +13,7 @@
 - [MySQL](https://www.mysql.com/)
 - [Docker/docker compose](https://www.docker.com/)
 - [SqlAlchemy](https://www.sqlalchemy.org/)
+- [Nginx](https://nginx.org/en/)
 - MVC Architecture
 - LAMP Stack
 
@@ -79,7 +80,7 @@ flask run
 docker compose --env-file .flaskenv up
 ```
 
-2. Access the application on `http://localhost:8080`
+2. Access the application on `https://localhost:443`
 
 3. To stop the application run
 ```bash
