@@ -169,3 +169,5 @@ white_list.json
 redis.conf
 
 datasets
+
+nginx/ssl/*

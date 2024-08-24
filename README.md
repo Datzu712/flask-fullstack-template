@@ -47,7 +47,7 @@ REDIS_PASSWORD=root
 REDIS_PORT=6379
 ```
 
-### Local setup
+### Local setup (Keep in mind that you need to have MySQL and Redis installed)
 
 3. Create a virtual environment
 ```bash
@@ -75,14 +75,18 @@ flask run
 ```
 
 ### Docker setup
-1. Run the docker compose command
+1. Generate the certificates for the Nginx server
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/cert.key -out nginx/ssl/cert.crt
+```
+2. Run the docker compose command
 ```bash
 docker compose --env-file .flaskenv up
 ```
 
-2. Access the application on `https://localhost:443`
+3. Access the application on `https://localhost:443`
 
-3. To stop the application run
+To stop the application run
 ```bash
 docker compose --env-file .flaskenv down
 ```

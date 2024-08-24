@@ -37,8 +37,8 @@ services:
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
       MYSQL_USER: "${MYSQL_USERNAME}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
-    ports:
-      - "${MYSQL_PORT}:3306"
+    #ports:
+    #  - "${MYSQL_PORT}:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
       interval: 5s
@@ -53,8 +53,8 @@ services:
       - .flaskenv
     environment:
       REDIS_ARGS: "--requirepass ${REDIS_PASSWORD} --user ${REDIS_USERNAME} on >${REDIS_PASSWORD} ~* allcommands --user default off nopass nocommands"
-    ports:
-      - "${REDIS_PORT}:6379"
+    #ports:
+    #  - "${REDIS_PORT}:6379"
 
 #volumes:
 #  db_data:
