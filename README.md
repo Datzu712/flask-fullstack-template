@@ -1,4 +1,4 @@
-# For Life, S.A Full Stack Application
+# Flask Full Stack Application (For Life, S.A uni)
 
 ## Table of contents
 1. [Tech Stack](#tech-stack)
