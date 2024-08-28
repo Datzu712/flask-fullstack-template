@@ -1,5 +1,7 @@
 # Flask Full Stack Application (For Life, S.A uni)
 
+![alt text](image.png)
+
 ## Table of contents
 1. [Tech Stack](#tech-stack)
 2. [Installation](#installation)
@@ -16,6 +18,8 @@
 - [Nginx](https://nginx.org/en/)
 - MVC Architecture
 - LAMP Stack
+- [Bootstrap 5 (MDB)](https://mdbootstrap.com/)
+- [JWT authentication](https://jwt.io/)
 
 ## Installation
 1. Clone the repository
