@@ -1,3 +1,4 @@
+[//]: # (el contexto de este repo era para un proyecto de la uni, segundo cuatri XD)
 # Flask Full Stack Application (For Life, S.A uni)
 
 ![alt text](image.png)
