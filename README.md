@@ -1,7 +1,5 @@
 [//]: # (el contexto de este repo era para un proyecto de la uni, segundo cuatri XD)
-# Flask Full Stack Application (For Life, S.A uni)
-
-![alt text](image.png)
+# For Life, S.A Full Stack Application
 
 ## Table of contents
 1. [Tech Stack](#tech-stack)
@@ -21,6 +19,15 @@
 - LAMP Stack
 - [Bootstrap 5 (MDB)](https://mdbootstrap.com/)
 - [JWT authentication](https://jwt.io/)
+
+
+## Web Application
+- Login/Logout
+- Register
+- Forgot password (Send an email with a token to reset the password)
+- Dashboard (Restricted access with roles)
+- Clients CRUD
+- Users CRUD
 
 ## Installation
 1. Clone the repository

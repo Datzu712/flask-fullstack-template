@@ -1,0 +1,30 @@
+FLASK_APP=wsgi
+FLASK_DEBUG=True
+FLASK_ENV=development
+FLASK_RUN_PORT=8080
+FLASK_RUN_HOST=0.0.0.0
+
+MYSQL_URL=mysql+pymysql://admin:root@mysql:3306/uni
+# Mysql conf for docker (you can leave it blank if you are not using docker)
+MYSQL_USERNAME=admin
+MYSQL_PASSWORD=root
+MYSQL_HOST=mysql
+MYSQL_PORT=3306  # redirect port of docker, mysql inside docker always would be 3306
+MYSQL_DATABASE=uni
+
+REDIS_URL=redis://admin:root@redis:6379/0
+# Redis conf for docker (you can leave it blank if you are not using docker)
+REDIS_USERNAME=admin
+REDIS_PASSWORD=root
+REDIS_PORT=6379
+
+SECRET_KEY=secret
+
+SMTP_SERVER=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=your_username
+SMTP_PASSWORD=password_token # you must use a token instead of your password
+SMTP_FROM_EMAIL=your_email@example.com
+SMTP_TO_EMAIL=recipient@example.com
+
+APP_URL=http://localhost:5000
