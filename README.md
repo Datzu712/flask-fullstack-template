@@ -1,3 +1,4 @@
+[//]: # (el contexto de este repo era para un proyecto de la uni, segundo cuatri XD)
 # For Life, S.A Full Stack Application
 
 ## Table of contents
@@ -16,7 +17,9 @@
 - [Nginx](https://nginx.org/en/)
 - MVC Architecture
 - LAMP Stack
-- [JWT Authentication](https://jwt.io/)
+- [Bootstrap 5 (MDB)](https://mdbootstrap.com/)
+- [JWT authentication](https://jwt.io/)
+
 
 ## Web Application
 - Login/Logout
