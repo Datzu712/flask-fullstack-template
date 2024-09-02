@@ -63,43 +63,47 @@
 </section>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('loginForm');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('loginForm');
 
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-            if (!form.checkValidity()) {
-                event.stopPropagation();
-                form.classList.add('was-validated');
-                return;
-            }
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
 
-            // Obtén los datos del formulario
-            const formData = new FormData(form);
-            const data = {
-                email: formData.get('email'),
-                password: formData.get('password'),
-                rememberMe: formData.get('rememberMe') === 'on'
-            };
-            fetch(`{{ url_for('api.auth.login') }}`, {
+        const formData = new FormData(form);
+        const data = {
+            email: formData.get('email'),
+            password: formData.get('password'),
+            rememberMe: formData.get('rememberMe') === 'on'
+        };
+
+        if (!data.email || !data.password) return;
+
+        try {
+            const response = await fetch(`{{ url_for('api.auth.login') }}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data),
-            })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error(res);
-                }
-                window.location.href = '/';
-            })
-            .catch((error) => {
-                console.error(error);
-                showErrorModal('The email or password is incorrect.', 'Credentials error');
             });
-        });
+
+            const resObj = await response.json();
+            if (!response.ok) {
+                return showErrorModal(resObj.error, 'Login error');
+            }
+
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error during login:', error);
+            showErrorModal('The email or password is incorrect.', 'Credentials error');
+        }
     });
+});
 </script>
 {% endblock %}

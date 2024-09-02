@@ -171,3 +171,5 @@ redis.conf
 datasets
 
 nginx/ssl/*
+
+.vscode

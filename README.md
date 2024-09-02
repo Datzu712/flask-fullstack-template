@@ -16,6 +16,15 @@
 - [Nginx](https://nginx.org/en/)
 - MVC Architecture
 - LAMP Stack
+- [JWT Authentication](https://jwt.io/)
+
+## Web Application
+- Login/Logout
+- Register
+- Forgot password (Send an email with a token to reset the password)
+- Dashboard (Restricted access with roles)
+- Clients CRUD
+- Users CRUD
 
 ## Installation
 1. Clone the repository

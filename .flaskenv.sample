@@ -19,3 +19,12 @@ REDIS_PASSWORD=root
 REDIS_PORT=6379
 
 SECRET_KEY=secret
+
+SMTP_SERVER=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=your_username
+SMTP_PASSWORD=password_token # you must use a token instead of your password
+SMTP_FROM_EMAIL=your_email@example.com
+SMTP_TO_EMAIL=recipient@example.com
+
+APP_URL=http://localhost:5000
