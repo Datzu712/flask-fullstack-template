@@ -1,6 +1,8 @@
 [//]: # (el contexto de este repo era para un proyecto de la uni, segundo cuatri XD)
 # For Life, S.A Full Stack Application
 
+![Application preview](/app/static/img/preview.png)
+
 ## Table of contents
 1. [Tech Stack](#tech-stack)
 2. [Installation](#installation)
