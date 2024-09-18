@@ -1,7 +1,6 @@
 {% extends "public_layout.html" %}
 
 {% block content %}
-<!-- Login 13 - Bootstrap Brain Component -->
 <section class="py-3 py-md-5">
     <div class="container">
         <div class="row justify-content-center">
@@ -61,49 +60,8 @@
         </div>
     </div>
 </section>
+{% endblock %}
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('loginForm');
-
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        if (!form.checkValidity()) {
-            event.stopPropagation();
-            form.classList.add('was-validated');
-            return;
-        }
-
-        const formData = new FormData(form);
-        const data = {
-            email: formData.get('email'),
-            password: formData.get('password'),
-            rememberMe: formData.get('rememberMe') === 'on'
-        };
-
-        if (!data.email || !data.password) return;
-
-        try {
-            const response = await fetch(`{{ url_for('api.auth.login') }}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data),
-            });
-
-            const resObj = await response.json();
-            if (!response.ok) {
-                return showErrorModal(resObj.error, 'Login error');
-            }
-
-            window.location.href = '/';
-        } catch (error) {
-            console.error('Error during login:', error);
-            showErrorModal('The email or password is incorrect.', 'Credentials error');
-        }
-    });
-});
-</script>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/login.bundle.js') }}"></script>
 {% endblock %}

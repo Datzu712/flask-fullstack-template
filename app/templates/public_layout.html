@@ -5,12 +5,8 @@
         <title>For Life S.A</title>
 
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-
-        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/public.bundle.js') }}"></script>
     </head>
     <body class="bg-light">
         <div class="page">
@@ -52,24 +48,6 @@
 			</div> 
 		</div>
 
-        <script>
-            (function () {
-                'use strict';
-
-                const forms = document.querySelectorAll('.needs-validation');
-
-                Array.prototype.slice.call(forms)
-                    .forEach(function (form) {
-                        form.addEventListener('submit', function (event) {
-                            if (!form.checkValidity()) {
-                                event.preventDefault();
-                                event.stopPropagation();
-                            }
-
-                            form.classList.add('was-validated');
-                        }, false);
-                    });
-            })();
-        </script>
+		{% block scripts %}{% endblock %}
     </body>
 </html>

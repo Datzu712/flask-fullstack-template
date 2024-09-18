@@ -1,10 +1,15 @@
 {
-  "name": "flask-fullstack",
-  "version": "0.0.1",
-  "description": "A fullstack template using Flask, MySQL, Nginx, Redis, Webpack, and more!",
+  "name": "my-webpack-project",
+  "version": "1.0.0",
+  "description": "My webpack project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch",
+    "serve": "webpack serve"
   },
   "repository": {
     "type": "git",
@@ -28,5 +33,22 @@
   "bugs": {
     "url": "https://github.com/Datzu712/flask-fullstack-template/issues"
   },
-  "homepage": "https://github.com/Datzu712/flask-fullstack-template#readme"
+  "homepage": "https://github.com/Datzu712/flask-fullstack-template#readme",
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
+    "@webpack-cli/generators": "^3.0.7",
+    "css-loader": "^7.1.2",
+    "prettier": "^3.3.3",
+    "sass": "^1.79.1",
+    "sass-loader": "^16.0.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.2",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3"
+  }
 }
