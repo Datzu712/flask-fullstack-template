@@ -73,7 +73,6 @@ class UserClient(Base):
         UniqueConstraint('client_id', 'user_id', name='user_clients_client_id_user_id_uindex'),
     )
 
-    # Relationships (optional, if you want to establish ORM relationships)
     user = relationship("User", back_populates="user_clients")
     client = relationship("Client", back_populates="user_clients")
 
@@ -82,6 +81,5 @@ if __name__ == "__main__":
     user = User()
     user.set_password("testpass")
 
-    # Verificamos la contraseña
     print(user.check_password("testpass"))
     print(user.check_password("wrongpassword")) 
