@@ -1,0 +1,32 @@
+{
+  "name": "flask-fullstack",
+  "version": "0.0.1",
+  "description": "A fullstack template using Flask, MySQL, Nginx, Redis, Webpack, and more!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Datzu712/flask-fullstack-template.git"
+  },
+  "keywords": [
+    "flask",
+    "docker",
+    "compose",
+    "mysql",
+    "webpack",
+    "nginx",
+    "redis",
+    "JWT",
+    "MVC",
+    "LAMP",
+    "sqlalchemy"
+  ],
+  "author": "Datzu712",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Datzu712/flask-fullstack-template/issues"
+  },
+  "homepage": "https://github.com/Datzu712/flask-fullstack-template#readme"
+}

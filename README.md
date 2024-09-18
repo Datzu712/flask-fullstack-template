@@ -27,7 +27,7 @@
 - Login/Logout
 - Register
 - Forgot password (Send an email with a token to reset the password)
-- Dashboard (Restricted access with roles)
+- Dashboard (Restricted access with admin role)
 - Clients CRUD
 - Users CRUD
 
