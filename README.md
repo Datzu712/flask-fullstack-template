@@ -51,7 +51,7 @@ MYSQL_URL=mysql+pymysql://admin:root@mysql:3306/uni
 MYSQL_USERNAME=admin
 MYSQL_PASSWORD=root
 MYSQL_HOST=mysql
-MYSQL_PORT=3306
+MYSQL_PORT=3306  # redirect port of docker, mysql inside docker always would be 3306
 MYSQL_DATABASE=uni
 
 REDIS_URL=redis://admin:root@redis:6379/0
@@ -59,6 +59,18 @@ REDIS_URL=redis://admin:root@redis:6379/0
 REDIS_USERNAME=admin
 REDIS_PASSWORD=root
 REDIS_PORT=6379
+
+SECRET_KEY=secret # secret key for the JWT token and flask sessions (we recommend to use different secrets for both)
+
+SMTP_SERVER=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=your_username
+SMTP_PASSWORD=password_token # you must use a token instead of your password
+SMTP_FROM_EMAIL=your_email@example.com
+SMTP_TO_EMAIL=recipient@example.com
+
+APP_URL=http://localhost:5000
+
 ```
 
 ### Local setup (Keep in mind that you need to have MySQL and Redis installed)
