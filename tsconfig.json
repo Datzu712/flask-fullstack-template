@@ -4,7 +4,12 @@
     "noImplicitAny": true,
     "module": "es6",
     "target": "es5",
-    "allowJs": true
+    "allowJs": true,
+    "typeRoots": ["node_modules/@types"],
+    "strict": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
   },
-  "files": ["src/ts/public.ts"]
+  "include": ["src/ts/**/*.ts"],
 }

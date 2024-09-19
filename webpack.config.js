@@ -12,6 +12,7 @@ const entries = fs.readdirSync(TS_FILES)
 
 const config = {
     entry: entries,
+    context: path.resolve(__dirname, TS_FILES),
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'app/static/js')
@@ -36,10 +37,14 @@ const config = {
     resolve: {
         extensions: ['.ts', '.js'],
     },
+    watchOptions: {
+        poll: true,
+        ignored: /node_modules/
+    },
 };
 
 module.exports = () => {
-    if (true || isProduction) {
+    if (isProduction) {
         config.mode = 'production';
     } else {
         config.mode = 'development';

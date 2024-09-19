@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/style.css'
+import '../styles/styles.css'
 
 (function () {
     'use strict';
