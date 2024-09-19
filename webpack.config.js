@@ -38,9 +38,9 @@ const config = {
         extensions: ['.ts', '.js'],
     },
     watchOptions: {
-        poll: true,
         ignored: /node_modules/
     },
+    devtool: false
 };
 
 module.exports = () => {
