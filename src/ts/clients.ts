@@ -1,10 +1,11 @@
 import 'datatables.net-bs5/css/dataTables.bootstrap5.css';
+//import 'bootstrap/js/dist/dropdown';
 
 import DataTable from 'datatables.net-bs5';
-import * as bootstrap from 'bootstrap';
-import { showErrorModal, showSuccessModal, createQuestion } from './components/modals.component';
+import Modal from 'bootstrap/js/dist/modal';
+import { createQuestion, showErrorModal, showSuccessModal } from './components/modals.component';
 
-let clientsData = [] as any[];
+const clientsData = [] as any[];
 
 let currentEditingClient: any = null;
 const form = document.getElementById('clientForm') as HTMLFormElement;
@@ -14,15 +15,15 @@ const clientDT = new DataTable('#clients-dt', {
     responsive: true,
     autoWidth: true,
     language: {
-        processing: "Processing...",
-        lengthMenu: "Showing _MENU_ clients",
-        zeroRecords: "No clients found",
-        emptyTable: "No clients available in this table",
-        info: "Showing clients from _START_ to _END_ (of _TOTAL_)",
-        infoEmpty: "Empty table",
-        infoFiltered: "",
-        search: "Search:",
-        loadingRecords: "Loading...",
+        processing: 'Processing...',
+        lengthMenu: 'Showing _MENU_ clients',
+        zeroRecords: 'No clients found',
+        emptyTable: 'No clients available in this table',
+        info: 'Showing clients from _START_ to _END_ (of _TOTAL_)',
+        infoEmpty: 'Empty table',
+        infoFiltered: '',
+        search: 'Search:',
+        loadingRecords: 'Loading...',
     },
     columns: [
         { data: 'name' },
@@ -32,7 +33,7 @@ const clientDT = new DataTable('#clients-dt', {
         {
             orderable: false,
             data: null,
-            render: function() {
+            render: function () {
                 return `
                     <div class="btn-group">
                         <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -53,31 +54,31 @@ const clientDT = new DataTable('#clients-dt', {
     ],
     layout: {
         // @ts-ignore
-        top: function() {
+        top: function () {
             const div = document.createElement('div');
             div.innerHTML = `<button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addClientModal">Add client</button>`;
 
             return div;
-        }
-    }
+        },
+    },
 });
 
-const modal = new bootstrap.Modal(document.getElementById('addClientModal')!, {
-    keyboard: false
+const modal = new Modal(document.getElementById('addClientModal')!, {
+    keyboard: false,
 });
 // @ts-ignore
-modal._element.addEventListener('hidden.bs.modal', function() {
+modal._element.addEventListener('hidden.bs.modal', function () {
     form.classList.remove('was-validated');
     form.reset();
 
     const inputs = form.querySelectorAll('input');
-    inputs.forEach(input => {
-       input.value = '';
+    inputs.forEach((input) => {
+        input.value = '';
     });
     currentEditingClient = null;
 });
 
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', function (event) {
     if (!form.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();
@@ -89,56 +90,67 @@ form.addEventListener('submit', function(event) {
             email: (document.getElementById('inputEmail') as HTMLInputElement).value,
             phone: (document.getElementById('inputPhone') as HTMLInputElement).value,
             address: (document.getElementById('inputAddress') as HTMLInputElement).value,
-            ...(currentEditingClient ? { id: currentEditingClient.id } : {})
+            ...(currentEditingClient ? { id: currentEditingClient.id } : {}),
         };
 
-        if (currentEditingClient && Object.keys(newClient).every((key) => newClient[key as keyof typeof newClient] === currentEditingClient[key])) {
+        if (
+            currentEditingClient &&
+            Object.keys(newClient).every(
+                (key) => newClient[key as keyof typeof newClient] === currentEditingClient[key],
+            )
+        ) {
             showErrorModal('No changes were made', 'warning');
             return;
         }
 
-        fetch('/api/clients' + (currentEditingClient ? `/${currentEditingClient.id}` : '') , {
+        fetch('/api/clients' + (currentEditingClient ? `/${currentEditingClient.id}` : ''), {
             method: currentEditingClient ? 'PATCH' : 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 name: (document.getElementById('inputName') as HTMLInputElement).value,
                 email: (document.getElementById('inputEmail') as HTMLInputElement).value,
                 phone: (document.getElementById('inputPhone') as HTMLInputElement).value,
                 address: (document.getElementById('inputAddress') as HTMLInputElement).value,
-            }
-        )}).then((res) => {
-            if (!res.ok) {
-                res.json().then(({ message }) => {
-                    showErrorModal(message, 'danger');
-                });
-                throw new Error('Error al crear el cliente');
-            }
-            if (currentEditingClient) {
-                const index = clientsData.findIndex((client: any) => client.id === currentEditingClient?.id as number);
-                clientsData[index] = newClient;
-                clientDT.clear().rows.add(clientsData).draw();
-            } else {
-                res.json()
-                    .then((d) => {
+            }),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    res.json().then(({ message }) => {
+                        showErrorModal(message, 'danger');
+                    });
+                    throw new Error('Error al crear el cliente');
+                }
+                if (currentEditingClient) {
+                    const index = clientsData.findIndex(
+                        (client: any) => client.id === (currentEditingClient?.id as number),
+                    );
+                    clientsData[index] = newClient;
+                    clientDT.clear().rows.add(clientsData).draw();
+                } else {
+                    res.json().then((d) => {
                         clientsData.push(d);
                         clientDT.clear().rows.add(clientsData).draw();
                     });
-            }
+                }
 
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addClientModal')!)!;
-            modal.hide();
-            showSuccessModal(`${currentEditingClient ? 'Edited' : 'Created'} client successful!`);
-        }).catch((error) => {
-            console.error(error);
-            showErrorModal(`An error occurred while ${currentEditingClient ? 'creating' : 'editing'} the client`, 'Error');
-        });
+                const modal = Modal.getInstance(document.getElementById('addClientModal')!)!;
+                modal.hide();
+                showSuccessModal(`${currentEditingClient ? 'Edited' : 'Created'} client successful!`);
+            })
+            .catch((error) => {
+                console.error(error);
+                showErrorModal(
+                    `An error occurred while ${currentEditingClient ? 'creating' : 'editing'} the client`,
+                    'Error',
+                );
+            });
     }
     form.classList.add('was-validated');
 });
 
-document.querySelector('#clients-dt tbody')!.addEventListener('click', function(event) {
+document.querySelector('#clients-dt tbody')!.addEventListener('click', function (event) {
     const d = clientDT.row((event.target as HTMLElement)!.closest('tr')!).data();
 
     switch ((event.target as HTMLElement).id) {
@@ -162,28 +174,28 @@ document.querySelector('#clients-dt tbody')!.addEventListener('click', function(
             createQuestion({
                 title: 'Are you sure?',
                 text: `Are you sure you want to delete the client "${d.name}"? This action cannot be undone.`,
-                confirmButtonText: 'Yes, I\'m sure',
+                confirmButtonText: "Yes, I'm sure",
                 cancelButtonText: 'Cancel',
                 confirmButtonColor: 'danger',
                 afterConfirm: () => {
                     return fetch('/api/clients/' + clientId, {
                         method: 'DELETE',
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            response.json().then(({ message }) => {
-                                showErrorModal(message, 'danger');
-                            });
-                        }
-                        showSuccessModal('Removed client successful!');
+                        .then((response) => {
+                            if (!response.ok) {
+                                response.json().then(({ message }) => {
+                                    showErrorModal(message, 'danger');
+                                });
+                            }
+                            showSuccessModal('Removed client successful!');
 
-                        const index = clientsData.findIndex((client) => clientId === client.id);
-                        clientsData.splice(index, 1);
-                        clientDT.clear().rows.add(clientsData).draw();
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
+                            const index = clientsData.findIndex((client) => clientId === client.id);
+                            clientsData.splice(index, 1);
+                            clientDT.clear().rows.add(clientsData).draw();
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
                 },
             });
             break;

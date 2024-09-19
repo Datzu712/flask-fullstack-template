@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = {
             email: formData.get('email'),
             password: formData.get('password'),
-            rememberMe: formData.get('rememberMe') === 'on'
+            rememberMe: formData.get('rememberMe') === 'on',
         };
         if (!data.email || !data.password) return;
 
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/auth/login`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
             });
