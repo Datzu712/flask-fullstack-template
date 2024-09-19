@@ -9,7 +9,10 @@
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
-    "serve": "webpack serve"
+    "serve": "webpack serve",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\""
   },
   "repository": {
     "type": "git",
@@ -35,15 +38,23 @@
   },
   "homepage": "https://github.com/Datzu712/flask-fullstack-template#readme",
   "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.10.0",
     "@types/bootstrap": "^5.2.10",
+    "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@webpack-cli/generators": "^3.0.7",
     "css-loader": "^7.1.2",
+    "eslint": "^9.10.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-webpack-plugin": "^4.2.0",
+    "globals": "^15.9.0",
     "prettier": "^3.3.3",
     "sass": "^1.79.1",
     "sass-loader": "^16.0.1",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.6.2",
+    "typescript": "5.5.4",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
