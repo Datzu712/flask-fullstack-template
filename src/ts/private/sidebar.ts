@@ -1,7 +1,5 @@
-import 'bootstrap/js/dist/dropdown';
-
 import Modal from 'bootstrap/js/dist/modal';
-import { showErrorModal } from './components/modals.component';
+import { showErrorModal } from '../components/modals';
 
 const button = document.getElementById('sidebarCollapse')!;
 const sidebar = document.getElementById('sidebarMenu')!;
@@ -13,6 +11,7 @@ button.addEventListener('click', () => {
 });
 
 logoutButton.addEventListener('click', () => {
+    console.log('Logging out');
     fetch('/api/auth/logout', {
         method: 'POST',
         headers: {
@@ -27,7 +26,7 @@ logoutButton.addEventListener('click', () => {
             const successModal = new Modal(modalElement);
 
             modalElement.addEventListener('hidden.bs.modal', function () {
-                window.location.href = '/api/auth/login';
+                window.location.href = '/auth/login';
             });
             successModal.show();
         })

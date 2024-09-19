@@ -176,4 +176,4 @@ nginx/ssl/*
 
 node_modules
 
-app/static
+app/static/js

@@ -1,4 +1,4 @@
-import { showErrorModal } from './components/modals.component';
+import { showErrorModal } from '../../components/modals';
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm') as HTMLFormElement;

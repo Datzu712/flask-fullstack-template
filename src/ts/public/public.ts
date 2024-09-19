@@ -1,6 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/styles.css';
-
 const forms = document.querySelectorAll('.needs-validation') as NodeListOf<HTMLFormElement>;
 Array.prototype.slice.call(forms).forEach(function (form: HTMLFormElement) {
     form.addEventListener(
