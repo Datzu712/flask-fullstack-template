@@ -8,7 +8,8 @@
 2. [Installation](#installation)
     1. [Local setup](#local-setup)
     2. [Docker setup](#docker-setup)
-3. [Author](#author)
+3. [webpack](#webpack)
+4. [Author](#author)
 
 ## Tech Stack
 - [Flask](https://flask.palletsprojects.com/en/3.0.x/)
@@ -21,15 +22,21 @@
 - LAMP Stack
 - [Bootstrap 5 (MDB)](https://mdbootstrap.com/)
 - [JWT authentication](https://jwt.io/)
+- [webpack](https://webpack.js.org/)
+- [eslint](https://eslint.org/)
+- [prettier](https://prettier.io/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 
 ## Web Application
 - Login/Logout
 - Register
 - Forgot password (Send an email with a token to reset the password)
-- Dashboard (Restricted access with roles)
+- Dashboard (Restricted access with admin role)
 - Clients CRUD
 - Users CRUD
+- Built with typescript and webpack
+- Responsive design
 
 ## Installation
 1. Clone the repository
@@ -116,6 +123,21 @@ To stop the application run
 ```bash
 docker compose --env-file .flaskenv down
 ```
+
+## Webpack
+The application is built with webpack and typescript, to compile the files run the following command
+```bash
+# production build
+npm run build:prod
+
+# development build
+npm run build:dev
+
+# watch mode
+npm run watch
+```
+
+I recommend to see the `webpack.config.mjs` file to see how the files are compiled and how entry points are defined (because it's like a custom configuration). Probably you should change the way that entries are loaded, it's up to you.
 
 ## Author
 - [Datzu712](https://github.com/Datzu712/)

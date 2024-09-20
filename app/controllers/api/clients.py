@@ -40,6 +40,25 @@ def create():
     
     return dumps(client.as_dict())
 
+@clients_api_bp.route('/', methods=['GET'])
+@token_required
+def read():
+    clients = db.session.query(Client)
+
+    if g.current_user.admin:
+        clients = clients.all()
+    
+    else:
+        clients = clients.join(UserClient).filter(
+            UserClient.user_id == g.current_user.id
+        ).all()
+        if len(clients) == 0:
+            clients = []
+        
+    clients = [c.as_dict() for c in clients]
+
+    return dumps(clients)
+
 @clients_api_bp.route('/<client_id>', methods=['PATCH'])
 @token_required
 def update(client_id):

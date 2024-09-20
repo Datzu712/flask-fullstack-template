@@ -1,0 +1,13 @@
+node_modules
+.github
+.git
+.vscode
+.gitignore
+README.md
+.venv
+
+
+nginx
+initdb
+LICENSE
+app/static/js/*

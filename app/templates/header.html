@@ -10,7 +10,7 @@
                     class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'dashboard' else '' }}"
                     aria-current="true"
                     >
-                <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>dashboard</span>
+                <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Dashboard</span>
                 </a>
                 <!-- Clients -->
                 <a href="{{ url_for('app.clients.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'clients' else '' }}"
@@ -56,7 +56,7 @@
             <ul class="navbar-nav ms-auto d-flex flex-row">
                 <!-- Icon -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link me-3 me-lg-0 dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link me-3 me-lg-0 dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user fa-2x"></i>
                         <span class="ms-2">{{ g.current_user.name }}</span>
                     </a>
@@ -69,36 +69,3 @@
         </div>
     </nav>
 </header>
-<script>
-    const button = document.getElementById('sidebarCollapse');
-    const sidebar = document.getElementById('sidebarMenu');
-
-    button.addEventListener('click', () => {
-        sidebar.classList.toggle('collapse');
-    });
-
-    const logoutButton = document.getElementById('logoutButton');
-    logoutButton.addEventListener('click', () => {
-        fetch('{{ url_for("api.auth.logout") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        }).then((response) => {
-            if (!response.ok) {
-                throw new Error(res);
-            }
-            const modalElement = document.getElementById('statusSuccessModal');
-            const successModal = new bootstrap.Modal(modalElement);
-
-            modalElement.addEventListener('hidden.bs.modal', function() {
-                window.location.href = "{{ url_for('app.auth.login') }}";
-            });
-            successModal.show();
-        }).catch((e) => {
-            console.error(e);
-            showErrorModal('Error', 'An error has ocurred while trying to logout.');
-        });
-    });
-</script>

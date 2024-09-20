@@ -173,3 +173,7 @@ datasets
 nginx/ssl/*
 
 .vscode
+
+node_modules
+
+app/static/js

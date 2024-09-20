@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "typeRoots": ["node_modules/@types"],
+    "strict": true,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@interfaces/*": ["./src/ts/interfaces/*"],
+      "@components/*": ["./src/ts/components/*"],
+    }
+  },
+  "include": ["src/ts/**/*.ts"],
+}

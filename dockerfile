@@ -1,5 +1,17 @@
-ARG PYTHON_VERSION=3.10.11
-FROM python:${PYTHON_VERSION}-slim as base
+# Webpack build
+FROM node:20.17.0-alpine AS build
+
+WORKDIR /web
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build:prod
+
+FROM python:3.12.6-slim AS production
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -32,6 +44,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Copy the source code into the container.
 COPY . .
+
+# Copy the built static files into the container.
+COPY --from=build ./web/app/static ./app/static
 
 # Run the application.
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]

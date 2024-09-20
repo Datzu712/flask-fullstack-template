@@ -40,7 +40,14 @@ def login():
 
     session['access_token'] = token
 
-    return jsonify({'message': 'Logged in successfully'}), 201
+    data = {
+        'email': email,
+        'username': user.name,
+        'id': user.id,
+        'admin': user.admin
+    }
+
+    return jsonify({'message': 'Logged in successfully', 'data': data }), 201
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():

@@ -22,3 +22,13 @@ def delete(userId):
     db.session.commit()
 
     return dumps({'message': 'User deleted'}), 200
+
+@user_api_bp.route('/', methods=['GET'])
+@token_required
+def list():
+    if not g.current_user.admin:
+        return dumps({'message': 'Unauthorized'}), 403
+
+    users = db.session.query(User).all()
+
+    return dumps([user.as_dict() for user in users]), 200
