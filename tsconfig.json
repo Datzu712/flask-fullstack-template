@@ -12,6 +12,10 @@
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@interfaces/*": ["./src/ts/interfaces/*"],
+      "@components/*": ["./src/ts/components/*"],
+    }
   },
   "include": ["src/ts/**/*.ts"],
 }

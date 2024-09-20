@@ -9,6 +9,7 @@ const GLOBAL_FILE_SEPARATE_BUNDLE = true;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const excludedFolders = ['components', 'interfaces'];
 
 /**
  * Folder structure:
@@ -87,7 +88,7 @@ const __dirname = path.dirname(__filename);
  */
 const entries = fs
     .readdirSync(SOURCE_FOLDER)
-    .filter((folderName) => folderName !== 'components')
+    .filter((folderName) => !excludedFolders.includes(folderName))
     .map((folderName) => {
         const folderContents = fs.readdirSync(path.resolve(SOURCE_FOLDER, folderName));
 
@@ -150,6 +151,11 @@ const config = {
     },
     resolve: {
         extensions: ['.ts', '.js'],
+        alias: {
+            // todo: probably we should extract this from tsconfig file (?
+            '@components': path.resolve(__dirname, 'src/ts/components'),
+            '@interfaces': path.resolve(__dirname, 'src/ts/interfaces'),
+        },
     },
     watchOptions: {
         ignored: /node_modules/,

@@ -1,4 +1,5 @@
 import 'datatables.net-bs5/css/dataTables.bootstrap5.css';
+import 'datatables.net-responsive-bs5';
 
 import DataTable from 'datatables.net-bs5';
 import type { Api } from 'datatables.net-bs5';

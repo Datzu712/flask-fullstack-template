@@ -14,6 +14,4 @@ def view():
     if not g.current_user.admin:
         raise NotFound()
 
-    users = db.session.query(User).all()
-
-    return render_template('views/users.html', active='users', data=[u.as_dict() for u in users])
+    return render_template('views/users.html', active='users')
