@@ -4,6 +4,8 @@ from sqlalchemy import text
 from dotenv import load_dotenv
 from flask_minify import Minify
 from flask_cors import CORS
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from .controllers import app_bp
 from .controllers.api import api_bp
@@ -13,6 +15,20 @@ load_dotenv('.flaskenv')
 
 def create_app():
     project_path = path.dirname(path.dirname(__file__)) + '/app'
+
+    sentry_dsn = environ.get('SENTRY_DSN')
+
+    if sentry_dsn:
+        sentry_sdk.init(
+            dsn=sentry_dsn,
+            traces_sample_rate=1.0,
+            profiles_sample_rate=1.0,
+            enable_tracing=True,
+            environment=environ.get('FLASK_ENV', 'production'),
+            integrations=[FlaskIntegration()]
+        )
+    else:
+        print('Sentry DSN not found. Skipping Sentry initialization')
 
     app = Flask(
         __name__,
