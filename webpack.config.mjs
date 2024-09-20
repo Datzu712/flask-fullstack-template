@@ -164,6 +164,7 @@ const config = {
 };
 
 export default () => {
+    console.debug(`Webpack is in ${isProduction ? 'production' : 'development'} mode`);
     if (isProduction) {
         config.mode = 'production';
     } else {

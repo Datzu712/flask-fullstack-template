@@ -25,7 +25,6 @@ def reset_password(token):
         payload = decode(token, environ.get('SECRET_KEY'), algorithms=['HS256'])
         data = redis_client._redis_client.get(f'password-reset:{payload.get("userId")}').decode('utf-8')
 
-        print(data)
         if not data or data != token:
             print('Token not found or expired')
             return NotFound()
@@ -33,4 +32,4 @@ def reset_password(token):
         print(e)
         raise NotFound()
 
-    return render_template('views/reset-password.html', token=token)
+    return render_template('views/reset-password.html')

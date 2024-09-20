@@ -1,3 +1,5 @@
+import 'bootstrap/dist/js/bootstrap.bundle'; // todo: check sidebar bug
+
 import type { IUserData } from '@interfaces/userData';
 
 const rawUserData = localStorage.getItem('user_data');

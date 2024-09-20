@@ -30,6 +30,7 @@ function initializeDataTable(): Api<any> {
         ajax: {
             url: '/api/users',
             dataSrc: function (json) {
+                console.log(json);
                 return json;
             },
         },
@@ -39,9 +40,9 @@ function initializeDataTable(): Api<any> {
             { data: 'name' },
             { data: 'email' },
             {
-                data: 'admin',
-                render: function (data: number) {
-                    return data === 1 ? 'Admin' : 'User';
+                data: null,
+                render: function (data) {
+                    return data.admin === 1 ? 'Admin' : 'User';
                 },
             },
             {

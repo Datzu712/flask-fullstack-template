@@ -1,3 +1,6 @@
+import 'bootstrap/js/dist/collapse';
+import 'bootstrap/js/dist/dropdown';
+
 import Modal from 'bootstrap/js/dist/modal';
 import { showErrorModal } from '../components/modals';
 
@@ -7,6 +10,7 @@ const logoutButton = document.getElementById('logoutButton')!;
 const modalElement = document.getElementById('statusSuccessModal')!;
 
 button.addEventListener('click', () => {
+    console.log('Toggling sidebar');
     sidebar.classList.toggle('collapse');
 });
 
