@@ -21,6 +21,10 @@
 - LAMP Stack
 - [Bootstrap 5 (MDB)](https://mdbootstrap.com/)
 - [JWT authentication](https://jwt.io/)
+- [webpack](https://webpack.js.org/)
+- [eslint](https://eslint.org/)
+- [prettier](https://prettier.io/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 
 ## Web Application
@@ -30,6 +34,8 @@
 - Dashboard (Restricted access with admin role)
 - Clients CRUD
 - Users CRUD
+- Built with typescript and webpack
+- Responsive design
 
 ## Installation
 1. Clone the repository
