@@ -26,6 +26,7 @@
 - [eslint](https://eslint.org/)
 - [prettier](https://prettier.io/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [Sentry](https://sentry.io/welcome/)
 
 
 ## Web Application
@@ -77,6 +78,8 @@ SMTP_FROM_EMAIL=your_email@example.com
 SMTP_TO_EMAIL=recipient@example.com
 
 APP_URL=http://localhost:5000
+
+SENTRY_DSN=your_sentry_dsn
 
 ```
 

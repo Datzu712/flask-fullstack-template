@@ -19,6 +19,7 @@ REDIS_PASSWORD=root
 REDIS_PORT=6379
 
 SECRET_KEY=secret
+SENTRY_DSN=your_sentry_dsn
 
 SMTP_SERVER=smtp.example.com
 SMTP_PORT=587

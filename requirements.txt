@@ -12,3 +12,4 @@ cryptography
 pyjwt
 bcrypt
 Faker
+sentry-sdk[flask]
