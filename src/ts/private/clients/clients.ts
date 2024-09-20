@@ -172,7 +172,7 @@ function setupTableClickEvents(clientDT: Api<Client>) {
     document.querySelector('#clients-dt tbody')!.addEventListener('click', (event) => {
         const d = clientDT.row((event.target as HTMLElement).closest('tr')!).data() as Client;
 
-        console.log('entro')
+        console.log('entro');
         switch ((event.target as HTMLElement).id) {
             case 'editButton':
                 handleEditButtonClick(d);

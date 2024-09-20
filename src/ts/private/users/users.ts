@@ -1,6 +1,5 @@
 import 'datatables.net-bs5/css/dataTables.bootstrap5.css';
 import 'datatables.net-responsive-bs5';
-import 'datatables.net-fixedheader-bs5';
 
 import DataTable from 'datatables.net-bs5';
 import moment from 'moment';
@@ -25,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// todo: finish CRUD operations
 function initializeDataTable(): Api<any> {
     return new DataTable('#users-dt', {
         ajax: {
@@ -35,7 +35,6 @@ function initializeDataTable(): Api<any> {
         },
         responsive: true,
         autoWidth: true,
-        fixedHeader: true,
         columns: [
             { data: 'name' },
             { data: 'email' },
