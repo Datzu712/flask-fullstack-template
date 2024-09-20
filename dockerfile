@@ -1,5 +1,18 @@
+# Webpack build
+FROM node:20.17.0-alpine as build
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build:prod
+
 ARG PYTHON_VERSION=3.10.11
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}-slim as production
 
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
