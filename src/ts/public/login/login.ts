@@ -1,7 +1,8 @@
-import { showErrorModal } from '../../components/modals';
+import { BasicAlert } from '../../components/alerts';
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm') as HTMLFormElement;
+    const formAlert = new BasicAlert('formAlerts');
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             password: formData.get('password'),
             rememberMe: formData.get('rememberMe') === 'on',
         };
+
         if (!data.email || !data.password) return;
 
         try {
@@ -29,13 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const resObj = await response.json();
+            console.log(resObj);
             if (!response.ok) {
-                return showErrorModal(resObj.error, 'Login error');
+                return formAlert.displayMessage({ message: resObj.error, type: 'danger' });
             }
             window.location.href = '/';
         } catch (error) {
             console.error('Error during login:', error);
-            showErrorModal('The email or password is incorrect.', 'Credentials error');
+            formAlert.displayMessage({ message: 'An error occurred while trying to login.', type: 'danger' });
         }
     });
 });

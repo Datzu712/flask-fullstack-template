@@ -1,3 +1,5 @@
+import 'bootstrap/js/dist/alert';
+
 const forms = document.querySelectorAll('.needs-validation') as NodeListOf<HTMLFormElement>;
 Array.prototype.slice.call(forms).forEach(function (form: HTMLFormElement) {
     form.addEventListener(
