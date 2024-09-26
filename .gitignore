@@ -177,3 +177,5 @@ nginx/ssl/*
 node_modules
 
 app/static/js
+
+newrelic.ini

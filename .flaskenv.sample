@@ -29,3 +29,9 @@ SMTP_FROM_EMAIL=your_email@example.com
 SMTP_TO_EMAIL=recipient@example.com
 
 APP_URL=http://localhost:5000
+
+
+# License key for New Relic
+NEW_RELIC_LKEY=license_key
+# User key for New Relic
+NEW_RELIC_UKEY=user_key
