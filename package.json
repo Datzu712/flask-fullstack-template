@@ -1,16 +1,14 @@
 {
-  "name": "my-webpack-project",
+  "name": "flask-fullstack-template",
   "version": "1.0.0",
-  "description": "My webpack project",
+  "description": "Flask FullStack template",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode=production --node-env=production",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch",
-    "serve": "webpack serve",
+    "build": "cross-env TS_NODE_PROJECT=\"tsconfig.json\" webpack --mode=production --node-env=production",
+    "build:dev": "cross-env TS_NODE_PROJECT=\"tsconfig.json\" webpack --mode=development",
+    "build:prod": "cross-env TS_NODE_PROJECT=\"tsconfig.json\" webpack --mode=production --node-env=production",
+    "watch": "cross-env TS_NODE_PROJECT=\"tsconfig.json\" webpack --watch",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "eslint --fix \"**/*.{ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\""
@@ -30,7 +28,13 @@
     "JWT",
     "MVC",
     "LAMP",
-    "sqlalchemy"
+    "sqlalchemy",
+    "typescript",
+    "bootstrap",
+    "datatables",
+    "mdb-ui-kit",
+    "moment",
+    "newrelic"
   ],
   "author": "Datzu712",
   "license": "MIT",
@@ -56,15 +60,17 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "cross-env": "^7.0.3",
     "datatables.net-bs5": "^2.1.7",
     "datatables.net-responsive-bs5": "^3.0.3",
     "jquery": "^3.7.1",
     "mdb-ui-kit": "^8.0.0",
     "moment": "^2.30.1",
+    "style-loader": "^4.0.0",
+    "sucrase": "^3.35.0",
+    "ts-loader": "^9.5.1",
     "uuid": "^10.0.0",
     "webpack": "^5.94.0",
-    "webpack-cli": "^5.1.4",
-    "ts-loader": "^9.5.1",
-    "style-loader": "^4.0.0"
+    "webpack-cli": "^5.1.4"
   }
 }

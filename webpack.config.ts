@@ -1,14 +1,13 @@
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'node:url';
+import webpack from 'webpack';
+import { inspect } from 'util';
 
 const isProduction = process.env.NODE_ENV == 'production';
 const SOURCE_FOLDER = './src/ts';
 // If true, each global file will be included as a separate bundle (They will continue to be included in the entries bundle)
 const GLOBAL_FILE_SEPARATE_BUNDLE = true;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const excludedFolders = ['components', 'interfaces'];
 
 /**
@@ -86,47 +85,56 @@ const excludedFolders = ['components', 'interfaces'];
  *   ]
  * }
  */
-const entries = fs
-    .readdirSync(SOURCE_FOLDER)
-    .filter((folderName) => !excludedFolders.includes(folderName))
-    .map((folderName) => {
-        const folderContents = fs.readdirSync(path.resolve(SOURCE_FOLDER, folderName));
+function getEntries() {
+    const entries = fs
+        .readdirSync(SOURCE_FOLDER)
+        .filter((folderName) => !excludedFolders.includes(folderName))
+        .map((folderName) => {
+            const folderContents = fs.readdirSync(path.resolve(SOURCE_FOLDER, folderName));
 
-        const entries = [];
-        const globalFiles = [];
-        folderContents.forEach((fileOrFolder) => {
-            if (fs.lstatSync(path.resolve(SOURCE_FOLDER, folderName, fileOrFolder)).isFile()) {
-                globalFiles.push(path.resolve(SOURCE_FOLDER, folderName, fileOrFolder));
-            } else {
-                entries.push(fileOrFolder);
+            const entries: string[] = [];
+            const globalFiles: string[] = [];
+            folderContents.forEach((fileOrFolder) => {
+                if (fs.lstatSync(path.resolve(SOURCE_FOLDER, folderName, fileOrFolder)).isFile()) {
+                    globalFiles.push(path.resolve(SOURCE_FOLDER, folderName, fileOrFolder));
+                } else {
+                    entries.push(fileOrFolder);
+                }
+            });
+
+            const webpackEntries: webpack.Entry = {};
+            for (const entry of entries) {
+                const entryFiles = fs.readdirSync(path.resolve(SOURCE_FOLDER, folderName, entry));
+                const files = entryFiles.map((file) => path.resolve(SOURCE_FOLDER, folderName, entry, file));
+                files.push(...globalFiles);
+
+                const mainFileIndex = files.findIndex((file) => file.endsWith('main.ts'));
+                if (mainFileIndex !== -1) {
+                    const [mainFile] = files.splice(mainFileIndex, 1);
+                    files.unshift(mainFile);
+                }
+
+                webpackEntries[entry as keyof typeof webpackEntries] = files;
             }
+
+            if (GLOBAL_FILE_SEPARATE_BUNDLE) {
+                for (const globalFile of globalFiles) {
+                    const globalFileName = path.basename(globalFile, path.extname(globalFile));
+                    webpackEntries[globalFileName] = [globalFile];
+                }
+            }
+            return webpackEntries;
+        })
+        .reduce((acc, entry) => {
+            return { ...acc, ...entry };
         });
 
-        const webpackEntries = {};
-        for (const entry of entries) {
-            const entryFiles = fs.readdirSync(path.resolve(SOURCE_FOLDER, folderName, entry));
-            const files = entryFiles.map((file) => path.resolve(SOURCE_FOLDER, folderName, entry, file));
-            files.push(...globalFiles);
+    console.debug('Webpack entries:', inspect(entries, { depth: null }));
+    return entries;
+}
 
-            webpackEntries[entry] = files;
-        }
-
-        if (GLOBAL_FILE_SEPARATE_BUNDLE) {
-            for (const globalFile of globalFiles) {
-                const globalFileName = path.basename(globalFile, path.extname(globalFile));
-                webpackEntries[globalFileName] = [globalFile];
-            }
-        }
-        return webpackEntries;
-    })
-    .reduce((acc, entry) => {
-        return { ...acc, ...entry };
-    });
-
-console.debug('Webpack entries:', entries);
-
-const config = {
-    entry: entries,
+const config: webpack.Configuration = {
+    entry: () => getEntries(),
     context: path.resolve(__dirname, SOURCE_FOLDER),
     output: {
         filename: '[name].bundle.js',

@@ -4,8 +4,8 @@ flask_sqlalchemy
 PyMySQL
 python-dotenv
 gunicorn
-Flask-Minify
-Flask-Minify[go]
+# Flask-Minify
+# Flask-Minify[go] if u aren't using webpack, this could be useful
 flask-redis
 flask-cors
 cryptography
@@ -13,3 +13,4 @@ pyjwt
 bcrypt
 Faker
 sentry-sdk[flask]
+# newrelic
