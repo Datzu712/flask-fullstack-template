@@ -14,7 +14,7 @@
 ## Tech Stack
 - [Flask](https://flask.palletsprojects.com/en/3.0.x/)
 - [Redis](https://redis.io/es/)
-- [MySQL](https://www.mysql.com/)
+- [Oracle 18c](https://www.oracle.com/database/technologies/xe18c-downloads.html)
 - [Docker/docker compose](https://www.docker.com/)
 - [SqlAlchemy](https://www.sqlalchemy.org/)
 - [Nginx](https://nginx.org/en/)
@@ -54,13 +54,13 @@ FLASK_ENV=development
 FLASK_RUN_PORT=8080
 FLASK_RUN_HOST=0.0.0.0
 
-MYSQL_URL=mysql+pymysql://admin:root@mysql:3306/uni
-# Mysql conf for docker (you can leave it blank if you are not using docker)
-MYSQL_USERNAME=admin
-MYSQL_PASSWORD=root
-MYSQL_HOST=mysql
-MYSQL_PORT=3306  # redirect port of docker, mysql inside docker always would be 3306
-MYSQL_DATABASE=uni
+ORACLE_URL=oracle+cx_oracle://admin:root@oracle:1521/uni
+# Oracle conf for docker (you can leave it blank if you are not using docker)
+ORACLE_USERNAME=admin
+ORACLE_PASSWORD=root
+ORACLE_HOST=oracle
+ORACLE_PORT=1521  # redirect port of docker, oracle inside docker always would be 1521
+ORACLE_DATABASE=uni
 
 REDIS_URL=redis://admin:root@redis:6379/0
 # Redis conf for docker (you can leave it blank if you are not using docker)
@@ -83,7 +83,7 @@ SENTRY_DSN=your_sentry_dsn
 
 ```
 
-### Local setup (Keep in mind that you need to have MySQL and Redis installed)
+### Local setup (Keep in mind that you need to have Oracle 18c and Redis installed)
 
 3. Create a virtual environment
 ```bash
@@ -144,3 +144,4 @@ I recommend to see the `webpack.config.mjs` file to see how the files are compil
 
 ## Author
 - [Datzu712](https://github.com/Datzu712/)
+
