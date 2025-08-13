@@ -13,4 +13,5 @@ pyjwt
 bcrypt
 Faker
 sentry-sdk[flask]
+flask_minify
 # newrelic
