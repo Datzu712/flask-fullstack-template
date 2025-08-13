@@ -22,7 +22,11 @@ def token_required(f):
             current_user = db.session.query(AppUser).filter_by(id=data['userId']).first()
 
             if not current_user:
-                return jsonify({ 'message': 'Forbidden' }), 403
+                session.pop('access_token', None)
+                if request.method == 'GET':
+                    return redirect(url_for('app.auth.login'))
+                else:
+                    raise Forbidden()
             
             cached_session = redis_client.get(f'sessions:{current_user.id}').decode('utf-8')
             if not cached_session or cached_session != token:

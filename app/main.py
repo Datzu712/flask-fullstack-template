@@ -60,12 +60,12 @@ def create_app():
 
     db.init_app(app)
     redis_client.init_app(app)
-    
     with app.app_context():
         try:
             print('Connecting to Oracle database...')
-            db.session.execute(text('SELECT 1 FROM DUAL'))
-            print('OracleDB connection successful')
+            result = db.session.execute(text('SELECT USER FROM DUAL'))
+            user = result.scalar()
+            print(f'OracleDB connection successful. Connected as user: {user}')
 
             print('Connecting to Redis...')
             redis_client._redis_client.ping()

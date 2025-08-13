@@ -1,0 +1,40 @@
+/* DataTables custom styling */
+.dataTables_wrapper .btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dataTables_wrapper td {
+    vertical-align: middle;
+}
+
+/* Center the action column content */
+.dataTables_wrapper td:last-child {
+    text-align: center;
+}
+
+/* Adjust button size and spacing */
+.dataTables_wrapper .btn {
+    padding: 0.375rem 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dataTables_wrapper .btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Add min-width to prevent table shrinking too much */
+.table {
+    min-width: 800px;
+}
+
+/* Improve responsive behavior */
+@media (max-width: 768px) {
+    .table {
+        min-width: 500px;
+    }
+}

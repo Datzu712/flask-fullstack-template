@@ -12,12 +12,34 @@
                     >
                 <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Dashboard</span>
                 </a>
-                <!-- patients -->
+                <!-- Patients -->
                 <a href="{{ url_for('app.patients.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'patients' else '' }}"
                     ><i class="fas fa-list-alt fa-fw me-3"></i><span>Patients</span></a
                     >
-            
-        
+                <!-- Facilities -->
+                <a href="{{ url_for('app.facilities.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'facilities' else '' }}"
+                    ><i class="fas fa-hospital fa-fw me-3"></i><span>Facilities</span></a
+                    >
+                <!-- Areas -->
+                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'areas' else '' }}"
+                    ><i class="fas fa-th-large fa-fw me-3"></i><span>Areas</span></a
+                    >
+                <!-- Doctors -->
+                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'doctors' else '' }}"
+                    ><i class="fas fa-user-md fa-fw me-3"></i><span>Doctors</span></a
+                    >
+                <!-- Rooms -->
+                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'rooms' else '' }}"
+                    ><i class="fas fa-door-open fa-fw me-3"></i><span>Rooms</span></a
+                    >
+                <!-- Appointments -->
+                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'appointments' else '' }}"
+                    ><i class="fas fa-calendar-check fa-fw me-3"></i><span>Appointments</span></a
+                    >
+                <!-- Users -->
+                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'users' else '' }}"
+                    ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
+                    >
             </div>
         </div>
     </nav>
@@ -54,10 +76,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link me-3 me-lg-0 dropdown-toggle d-flex align-items-center" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user fa-2x"></i>
-                        <span class="ms-2">{{ g.current_user.name }}</span>
+                        <span class="ms-2">{{ g.current_user.username }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
                         <li><a class="dropdown-item"id="logoutButton">Logout</a></li>
                     </ul>
                 </li>
