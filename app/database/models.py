@@ -13,12 +13,12 @@ class Base(DeclarativeBase):
         result = {}
         for c in self.__table__.columns:
             value = getattr(self, c.name)
-            if not value:
+            if not value and not isinstance(value, int):
                 continue
 
-            if isinstance(value, (date, datetime)):
+            if isinstance(value, (date, datetime.datetime)):
                 result[c.name] = value.isoformat()
-            elif isinstance(value, Decimal):
+            elif isinstance(value, (Decimal)):
                 result[c.name] = str(value)
             else:
                 result[c.name] = value

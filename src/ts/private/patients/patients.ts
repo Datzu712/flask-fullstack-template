@@ -6,11 +6,11 @@ import type { Api } from 'datatables.net-bs5';
 import Modal from 'bootstrap/js/dist/modal';
 import { createQuestion, showErrorModal, showSuccessModal } from '../../components/modals';
 
-type Client = {
+type ResourceDataType = {
     id: number;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: Date;
+    first_name: string;
+    last_name: string;
+    date_of_birth: Date;
     gender: number;
     phone?: string;
     email: string;
@@ -20,29 +20,28 @@ type Client = {
     deletedAt?: Date;
 };
 
-const clientsData: Client[] = [];
-let currentEditingClient: Client | null = null;
-const form = document.getElementById('clientForm') as HTMLFormElement;
-const modalElement = document.getElementById('addClientModal')!;
+const API_URL = '/api/patients';
+
+const data: ResourceDataType[] = [];
+let currentEditingData: ResourceDataType | null = null;
+const form = document.getElementById('resourceForm') as HTMLFormElement;
+const modalElement = document.getElementById('addResourceModal')!;
 let modal: Modal = {} as Modal;
 
 document.addEventListener('DOMContentLoaded', () => {
     modal = new Modal(modalElement, { keyboard: false });
 
-    const clientDT = initializeDataTable();
+    const datatable = initializeDataTable();
     setupModalEvents();
-    setupFormSubmit(clientDT);
-    setupTableClickEvents(clientDT);
+    setupFormSubmit(datatable);
+    setupTableClickEvents(datatable);
 });
 
 function initializeDataTable() {
-    return new DataTable<Client>('#clients-dt', {
+    return new DataTable<ResourceDataType>('#resource-dt', {
         ajax: {
-            dataSrc: function (json) {
-                clientsData.push(...json);
-                return json;
-            },
-            url: '/api/clients',
+            dataSrc: 'data',
+            url: API_URL,
         },
         responsive: true,
         autoWidth: true,
@@ -58,7 +57,18 @@ function initializeDataTable() {
             loadingRecords: 'Loading...',
         },
         columns: [
-            { data: 'name' },
+            { data: 'first_name' },
+            { data: 'last_name' },
+            {
+                data: 'date_of_birth',
+                render: (data: string) => new Date(data).toLocaleDateString(),
+            },
+            {
+                data: null,
+                render: (data: any) => {
+                    return data.gender === 0 ? 'Male' : 'Female';
+                },
+            },
             { data: 'email' },
             { data: 'phone' },
             { data: 'address' },
@@ -95,90 +105,105 @@ function initializeDataTable() {
 function setupModalEvents() {
     modalElement.addEventListener('hidden.bs.modal', () => {
         resetForm();
-        currentEditingClient = null;
+        currentEditingData = null;
     });
 }
 
-function setupFormSubmit(clientDT: Api<Client>) {
+function setupFormSubmit(datatable: Api<ResourceDataType>) {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         if (!form.checkValidity()) {
             event.stopPropagation();
         } else {
-            handleFormSubmit(clientDT);
+            handleFormSubmit(datatable);
         }
         form.classList.add('was-validated');
     });
 }
 
-function handleFormSubmit(clientDT: Api<Client>) {
-    const newClient: Client = {
-        firstName: (document.getElementById('inputFirstName') as HTMLInputElement).value,
-        lastName: (document.getElementById('inputLastName') as HTMLInputElement).value,
-        dateOfBirth: new Date((document.getElementById('inputDob') as HTMLInputElement).value),
-        gender: parseInt((document.querySelector('input[name="gender"]:checked') as HTMLInputElement).value),
+function handleFormSubmit(datatable: Api<ResourceDataType>) {
+    const genderMaleInput = document.getElementById('genderMale') as HTMLInputElement;
+    const genderFemaleInput = document.getElementById('genderFemale') as HTMLInputElement;
+
+    let gender: number | null = null;
+    if (genderMaleInput.checked) {
+        gender = 0; // Male
+    } else if (genderFemaleInput.checked) {
+        gender = 1; // Female
+    }
+
+    if (gender === null) {
+        showErrorModal('Please select a gender', 'warning');
+        return;
+    }
+
+    const newData = {
+        first_name: (document.getElementById('inputFirstName') as HTMLInputElement).value,
+        last_name: (document.getElementById('inputLastName') as HTMLInputElement).value,
+        date_of_birth: new Date((document.getElementById('inputDob') as HTMLInputElement).value),
+        gender,
         email: (document.getElementById('inputEmail') as HTMLInputElement).value,
         phone: (document.getElementById('inputPhone') as HTMLInputElement).value || undefined,
         address: (document.getElementById('inputAddress') as HTMLInputElement).value || undefined,
-        ...(currentEditingClient ? { id: currentEditingClient.id } : {}),
-    };
+        ...(currentEditingData ? { id: currentEditingData.id } : {}),
+    } as Partial<ResourceDataType>;
 
-    if (currentEditingClient && isClientUnchanged(newClient)) {
+    if (currentEditingData && isDataUnchanged(newData)) {
         showErrorModal('No changes were made', 'warning');
         return;
     }
 
-    const method = currentEditingClient ? 'PATCH' : 'POST';
-    const url = '/api/clients' + (currentEditingClient ? `/${currentEditingClient.id}` : '');
+    const method = currentEditingData ? 'PATCH' : 'POST';
+    const url = API_URL + (currentEditingData ? `/${currentEditingData.id}` : '');
 
     fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newClient),
+        body: JSON.stringify(newData),
     })
-        .then((res) => handleResponse(res, newClient, clientDT))
+        .then((res) => handleResponse(res, newData, datatable))
         .catch((error) => {
             console.error(error);
             showErrorModal(
-                `An error occurred while ${currentEditingClient ? 'editing' : 'creating'} the client`,
+                `An error occurred while ${currentEditingData ? 'editing' : 'creating'} the client`,
                 'Error',
             );
         });
 }
 
-function handleResponse(res: Response, newClient: Client, clientDT: Api<Client>) {
+function handleResponse(res: Response, newData: Partial<ResourceDataType>, datatable: Api<ResourceDataType>) {
     if (!res.ok) {
         res.json().then(({ message }) => showErrorModal(message, 'danger'));
-        throw new Error('Error processing the client');
+        throw new Error('Error processing the patient');
     }
 
-    if (currentEditingClient) {
-        updateClient(newClient, clientDT);
+    if (currentEditingData) {
+        updateData(newData as ResourceDataType, datatable);
     } else {
         res.json().then((d) => {
-            clientsData.push(d);
-            clientDT.clear().rows.add(clientsData).draw();
+            data.push(d);
+            datatable.clear().rows.add(data).draw();
         });
     }
     modal.hide();
-    showSuccessModal(`${currentEditingClient ? 'Edited' : 'Created'} client successful!`);
+    showSuccessModal(`${currentEditingData ? 'Edited' : 'Created'} patient successful!`);
 }
 
-function updateClient(newClient: Client, clientDT: Api<Client>) {
-    const index = clientsData.findIndex((client) => client.id === currentEditingClient!.id);
-    clientsData[index] = newClient;
-    clientDT.clear().rows.add(clientsData).draw();
+function updateData(newData: ResourceDataType, datatable: Api<ResourceDataType>) {
+    const index = data.findIndex((d) => d.id === currentEditingData!.id);
+    data[index] = newData;
+    datatable.clear().rows.add(data).draw();
 }
 
-function isClientUnchanged(newClient: Client) {
-    return Object.keys(newClient).every(
-        (key) => newClient[key as keyof Client] === currentEditingClient![key as keyof Client],
+function isDataUnchanged(newData: Partial<ResourceDataType>) {
+    return Object.keys(newData).every(
+        (key) => newData[key as keyof ResourceDataType] === currentEditingData![key as keyof ResourceDataType],
     );
 }
 
-function setupTableClickEvents(clientDT: Api<Client>) {
-    document.querySelector('#clients-dt tbody')!.addEventListener('click', (event) => {
-        const d = clientDT.row((event.target as HTMLElement).closest('tr')!).data() as Client;
+function setupTableClickEvents(datatable: Api<ResourceDataType>) {
+    document.querySelector('#resource-dt tbody')!.addEventListener('click', (event) => {
+        const d = datatable.row((event.target as HTMLElement).closest('tr')!).data() as ResourceDataType;
 
         console.log('entro');
         switch ((event.target as HTMLElement).id) {
@@ -186,38 +211,45 @@ function setupTableClickEvents(clientDT: Api<Client>) {
                 handleEditButtonClick(d);
                 break;
             case 'deleteButton':
-                handleDeleteButtonClick(d, clientDT);
+                handleDeleteButtonClick(d, datatable);
                 break;
         }
     });
 }
 
-function handleEditButtonClick(client: Client) {
-    currentEditingClient = { ...client };
-    (document.getElementById('inputFirstName') as HTMLInputElement).value = client.firstName;
-    (document.getElementById('inputLastName') as HTMLInputElement).value = client.lastName;
-    (document.getElementById('inputDob') as HTMLInputElement).value = new Date(client.dateOfBirth).toISOString().split('T')[0];
-    (document.querySelector(`input[name="gender"][value="${client.gender}"]`) as HTMLInputElement).checked = true;
-    (document.getElementById('inputEmail') as HTMLInputElement).value = client.email;
-    (document.getElementById('inputPhone') as HTMLInputElement).value = client.phone || '';
-    (document.getElementById('inputAddress') as HTMLInputElement).value = client.address || '';
+function handleEditButtonClick(editedData: ResourceDataType) {
+    currentEditingData = { ...editedData };
+    (document.getElementById('inputFirstName') as HTMLInputElement).value = editedData.first_name;
+    (document.getElementById('inputLastName') as HTMLInputElement).value = editedData.last_name;
+    (document.getElementById('inputDob') as HTMLInputElement).value = new Date(editedData.date_of_birth)
+        .toISOString()
+        .split('T')[0];
+    (document.getElementById('inputEmail') as HTMLInputElement).value = editedData.email;
+    (document.getElementById('inputPhone') as HTMLInputElement).value = editedData.phone || '';
+    (document.getElementById('inputAddress') as HTMLInputElement).value = editedData.address || '';
+
+    if (editedData.gender === 0) {
+        (document.getElementById('genderMale') as HTMLInputElement).checked = true;
+    } else if (editedData.gender === 1) {
+        (document.getElementById('genderFemale') as HTMLInputElement).checked = true;
+    }
 
     modal.show();
 }
 
-function handleDeleteButtonClick(client: Client, clientDT: Api<Client>) {
+function handleDeleteButtonClick(targetData: ResourceDataType, datatable: Api<ResourceDataType>) {
     createQuestion({
         title: 'Are you sure?',
-        text: `Are you sure you want to delete the client "${client.firstName} ${client.lastName}"? This action cannot be undone.`,
+        text: `Are you sure you want to delete the patient "${targetData.first_name} ${targetData.last_name}"? This action cannot be undone.`,
         confirmButtonText: "Yes, I'm sure",
         cancelButtonText: 'Cancel',
         confirmButtonColor: 'danger',
-        afterConfirm: () => deleteClient(client.id!, clientDT),
+        afterConfirm: () => deleteResource(targetData.id!, datatable),
     });
 }
 
-function deleteClient(clientId: number, clientDT: Api<Client>) {
-    fetch('/api/clients/' + clientId, { method: 'DELETE' })
+function deleteResource(dataId: number, datatable: Api<ResourceDataType>) {
+    fetch(API_URL + '/' + dataId, { method: 'DELETE' })
         .then((response) => {
             if (!response.ok) {
                 response.json().then(({ message }) => showErrorModal(message, 'danger'));
@@ -225,10 +257,10 @@ function deleteClient(clientId: number, clientDT: Api<Client>) {
             }
             modal.hide();
 
-            showSuccessModal('Removed client successful!');
-            const index = clientsData.findIndex((client) => clientId === client.id);
-            clientsData.splice(index, 1);
-            clientDT.clear().rows.add(clientsData).draw();
+            showSuccessModal('Removed patient successful!');
+            const index = data.findIndex((client) => dataId === client.id);
+            data.splice(index, 1);
+            datatable.clear().rows.add(data).draw();
         })
         .catch((error) => console.error(error));
 }
