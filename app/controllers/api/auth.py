@@ -6,9 +6,10 @@ from datetime import datetime, timedelta
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from sqlalchemy import text
 
 from ...extensions import db, redis_client
-from ...database.models import User
+from ...database.models import AppUser
 
 auth_bp = blueprints.Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -18,8 +19,8 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
-    user = db.session.query(User).filter(
-        User.email == email
+    user = db.session.query(AppUser).filter(
+        AppUser.email == email
     ).first()
 
     if not user or not user.check_password(password):
@@ -28,9 +29,9 @@ def login():
     token = encode(
         { 
             'email': email,
-            'username': user.name,
+            'username': user.username,
             'userId': user.id,
-            'admin': user.admin,
+            'admin': user.role,
             'ct': datetime.now().timestamp()
         }, 
         environ.get('SECRET_KEY'), 
@@ -42,9 +43,9 @@ def login():
 
     data = {
         'email': email,
-        'username': user.name,
+        'username': user.username,
         'id': user.id,
-        'admin': user.admin
+        'admin': user.role
     }
 
     return jsonify({'message': 'Logged in successfully', 'data': data }), 201
@@ -69,14 +70,22 @@ def register():
     password = data.get('password')
     name = data.get('username')
 
-    if db.session.query(User).filter(User.email == email).first():
+    if db.session.query(AppUser).filter(AppUser.email == email).first():
         return jsonify({'error': 'User already exists'}), 400
 
-    user = User(email=email, name=name)
-    user.id = str(uuid4())
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
+    try:
+        next_id = db.session.execute(
+            text('SELECT MAX(id) FROM app_user')
+        ).scalar() or 0
+            
+        user = AppUser(email=email, username=name, is_active=0, id=next_id + 1)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return jsonify({'error': 'An error occurred while creating the user', 'details': str(e)}), 500
 
     return jsonify({'message': 'User created successfully'}), 201
 
@@ -85,8 +94,8 @@ def forgot_password():
     data = request.get_json()
     email = data.get('email')
 
-    user = db.session.query(User).filter(
-        User.email == email
+    user = db.session.query(AppUser).filter(
+        AppUser.email == email
     ).first()
 
     if not user:
@@ -148,8 +157,8 @@ def reset_password(token):
     if not cached_reset_token or cached_reset_token != token:
         return jsonify({'error': 'Invalid token'}), 400
 
-    user = db.session.query(User).filter(
-        User.id == payload.get('userId')
+    user = db.session.query(AppUser).filter(
+        AppUser.id == payload.get('userId')
     ).first()
 
     if not user:

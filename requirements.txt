@@ -1,7 +1,6 @@
 flask
 SQLAlchemy
 flask_sqlalchemy
-PyMySQL
 python-dotenv
 gunicorn
 # Flask-Minify

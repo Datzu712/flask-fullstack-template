@@ -13,6 +13,10 @@ from .extensions import db, redis_client
 
 load_dotenv('.flaskenv')
 
+# import logging
+# logging.basicConfig()
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
 def create_app():
     project_path = path.dirname(path.dirname(__file__)) + '/app'
 
@@ -43,7 +47,7 @@ def create_app():
 
     Minify(app=app, html=True, js=True, cssless=True, go=True, static=True)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('MYSQL_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('oracle_url')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         'pool_pre_ping': True
@@ -59,9 +63,9 @@ def create_app():
     
     with app.app_context():
         try:
-            print('Connecting to MySQL database...')
-            db.session.execute(text('SELECT 1+1'))
-            print('MySQL connection successful')
+            print('Connecting to Oracle database...')
+            db.session.execute(text('SELECT 1 FROM DUAL'))
+            print('OracleDB connection successful')
 
             print('Connecting to Redis...')
             redis_client._redis_client.ping()

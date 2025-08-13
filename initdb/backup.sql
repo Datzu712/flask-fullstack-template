@@ -1,113 +1,154 @@
--- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
---
--- Host: 0.0.0.0    Database: uni
--- ------------------------------------------------------
--- Server version	11.1.3-MariaDB-1:11.1.3+maria~ubu2204
+create table FACILITY
+(
+    ID           NUMBER GENERATED AS IDENTITY
+		constraint FACILITY_PK
+			primary key,
+    NAME        VARCHAR2(100) not null,
+    DESCRIPTION VARCHAR2(320) not null,
+    CREATED_AT  TIMESTAMP(6) default SYSTIMESTAMP,
+    UPDATED_AT  TIMESTAMP(6),
+    DELETED_AT  TIMESTAMP(6)
+)
+/
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+comment on table FACILITY is 'Establecimiento, por ej (Hospital Clínica Bíblica)'
+/
 
---
--- Table structure for table `client`
---
+create unique index FACILITY_NAME_UINDEX
+    on FACILITY (NAME)
+/
 
-DROP TABLE IF EXISTS `client`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `client` (
-  `id` varchar(36) NOT NULL COMMENT 'UUIDV4',
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `phone` varchar(48) NOT NULL,
-  `address` varchar(504) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `client_email_uindex` (`email`),
-  UNIQUE KEY `client_name_uindex` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+create table AREA
+(
+    ID          NUMBER GENERATED AS IDENTITY
+		constraint AREA_PK
+			primary key,
+    FACILITY_ID NUMBER        not null
+        constraint AREA_FACILITY_ID_FK
+            references FACILITY,
+    NAME        VARCHAR2(100) not null,
+    DESCRIPTION VARCHAR2(320) not null,
+    CREATED_AT  TIMESTAMP(6) default SYSTIMESTAMP,
+    UPDATED_AT  TIMESTAMP(6),
+    DELETED_AT  TIMESTAMP(6)
+)
+/
 
---
--- Dumping data for table `client`
---
+create table DOCTOR
+(
+    ID         NUMBER GENERATED AS IDENTITY
+		constraint DOCTOR_PK
+			primary key,
+    FIRST_NAME VARCHAR2(100) not null,
+    LAST_NAME  VARCHAR2(100) not null,
+    PHONE      VARCHAR2(20),
+    EMAIL      VARCHAR2(200) not null,
+    CREATED_AT TIMESTAMP(6) default SYSTIMESTAMP,
+    UPDATED_AT TIMESTAMP(6) default null,
+    DELETED_AT TIMESTAMP(6) default null
+)
+/
 
-LOCK TABLES `client` WRITE;
-/*!40000 ALTER TABLE `client` DISABLE KEYS */;
-/*!40000 ALTER TABLE `client` ENABLE KEYS */;
-UNLOCK TABLES;
+create table DOCTOR_FACILITY
+(
+    AREA_ID   NUMBER not null
+        constraint DOCTOR_FACILITY_AREA_ID_FK
+            references AREA
+                on delete cascade,
+    DOCTOR_ID NUMBER not null
+        constraint DOCTOR_FACILITY_DOCTOR_ID_FK
+            references DOCTOR
+                on delete cascade,
+    constraint DOCTOR_FACILITY_PK
+        primary key (DOCTOR_ID, AREA_ID)
+)
+/
 
---
--- Table structure for table `user_clients`
---
+create table ROOM
+(
+    ID          NUMBER GENERATED AS IDENTITY
+		constraint ROOM_PK
+			primary key,
+    AREA_ID     NUMBER        not null
+        constraint ROOM_AREA_ID_FK
+            references AREA
+                on delete cascade,
+    NAME        VARCHAR2(100) not null,
+    DESCRIPTION VARCHAR2(300) not null,
+    CREATED_AT  TIMESTAMP(6) default SYSTIMESTAMP,
+    DELETED_AT  TIMESTAMP(8)
+)
+/
 
-DROP TABLE IF EXISTS `user_clients`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_clients` (
-  `user_id` varchar(36) NOT NULL,
-  `client_id` varchar(36) NOT NULL,
-  PRIMARY KEY (`user_id`,`client_id`),
-  UNIQUE KEY `user_clients_client_id_user_id_uindex` (`client_id`,`user_id`),
-  CONSTRAINT `user_clients_client_id_fk` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
-  CONSTRAINT `user_clients_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+comment on column ROOM.AREA_ID is 'Lugar dentro de un área donde los doctores atienden a pacientes'
+/
 
---
--- Dumping data for table `user_clients`
---
+create table PATIENT
+(
+    ID          NUMBER GENERATED AS IDENTITY
+		constraint PATIENT_PK
+			primary key,
+    FIRST_NAME    VARCHAR2(100) not null,
+    LAST_NAME     VARCHAR2(100) not null,
+    DATE_OF_BIRTH DATE          not null,
+    GENDER        NUMBER(1)     not null,
+    PHONE         VARCHAR2(50),
+    EMAIL         VARCHAR2(150) not null,
+    ADDRESS       VARCHAR2(250),
+    CREATED_AT    TIMESTAMP(6) default SYSTIMESTAMP,
+    UPDATED_AT    TIMESTAMP(6),
+    DELETED_AT    TIMESTAMP(6)
+)
+/
 
-LOCK TABLES `user_clients` WRITE;
-/*!40000 ALTER TABLE `user_clients` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_clients` ENABLE KEYS */;
-UNLOCK TABLES;
+comment on column PATIENT.GENDER is '0  HOMBRE || MUJER 1'
+/
 
---
--- Table structure for table `users`
---
+create table APPOINTMENT
+(
+    ID          NUMBER GENERATED AS IDENTITY
+		constraint APPOINTMENT_PK
+			primary key,
+    PATIENT_ID  NUMBER                           not null
+        constraint APPOINTMENT_PATIENT_ID_FK
+            references PATIENT,
+    DOCTOR_ID   NUMBER                           not null
+        constraint APPOINTMENT_DOCTOR_ID_FK
+            references DOCTOR,
+    ROOM_ID     NUMBER                           not null
+        constraint APPOINTMENT_ROOM_ID_FK
+            references ROOM,
+    START_TIME  TIMESTAMP(6)                     not null,
+    END_TIME    TIMESTAMP(6)                     not null,
+    STATUS      VARCHAR2(20) default 'scheduled' not null
+        constraint CHECK_NAME
+            check (status IN ('scheduled', 'confirmed', 'completed', 'canceled')),
+    DESCRIPTION VARCHAR2(500)
+)
+/
 
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `id` varchar(36) NOT NULL COMMENT 'UUID',
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL COMMENT 'Hashed password',
-  `admin` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_uindex` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+create index APPOINTMENT_START_TIME_END_TIME_INDEX
+    on APPOINTMENT (START_TIME, END_TIME)
+/
 
---
--- Dumping data for table `users`
---
+create table APP_USER
+(
+    ID        NUMBER GENERATED AS IDENTITY
+		constraint USER_PK
+			primary key,
+    USERNAME      VARCHAR2(50)           not null,
+    EMAIL         VARCHAR2(100)          not null,
+    PASSWORD_HASH VARCHAR2(100),
+    ROLE          VARCHAR2(20)
+        constraint ROLE
+            check (role IN ('admin', 'receptionist', 'doctor')),
+    IS_ACTIVE     NUMBER(1)    default 0 not null,
+    CREATED_AT    TIMESTAMP(6) default SYSTIMESTAMP,
+    UPDATED_AT    TIMESTAMP(6),
+    DELETED_AT    TIMESTAMP(6)
+)
+/
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('86996e37-9ea6-4ef9-8ba8-869ed381a439','root','root@admin.com','$2b$12$Gn0mpuV8C4I0ABssor8Vquxpp1Viw3XTTJb0SEn5sU6jMFSnwbkni',1,'2024-08-18 17:24:17','2024-08-18 17:24:17');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+comment on table APP_USER is 'Usuarios dentro de la aplicacion'
+/
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-08-18 15:47:07

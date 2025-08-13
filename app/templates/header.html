@@ -12,16 +12,12 @@
                     >
                 <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Dashboard</span>
                 </a>
-                <!-- Clients -->
-                <a href="{{ url_for('app.clients.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'clients' else '' }}"
-                    ><i class="fas fa-list fa-fw me-3"></i><span>Clients</span></a
+                <!-- patients -->
+                <a href="{{ url_for('app.patients.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'patients' else '' }}"
+                    ><i class="fas fa-list-alt fa-fw me-3"></i><span>Patients</span></a
                     >
-                {% if g.current_user.admin  %}
-                    <!-- Users -->
-                    <a href="{{ url_for('app.users.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'users' else '' }}"
-                        ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
-                        >
-                {% endif %}
+            
+        
             </div>
         </div>
     </nav>

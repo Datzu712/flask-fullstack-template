@@ -10,11 +10,11 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/')
 @dashboard_bp.route('/', methods=['GET'])
 @token_required
 def view():
-    # mysql latency
-    mysql_start_time = time.time()
-    db.session.execute(text('SELECT * FROM users'))
-    mysql_end_time = time.time()
-    mysql_latency_ms = (mysql_end_time - mysql_start_time) * 1000
+    # oracle latency
+    oracle_start_time = time.time()
+    db.session.execute(text('SELECT 1 FROM dual'))
+    oracle_end_time = time.time()
+    oracle_latency_ms = (oracle_end_time - oracle_start_time) * 1000
 
     # redis latency
     redis_start_time = time.time()
@@ -23,6 +23,6 @@ def view():
     redis_latency_ms = (redis_end_time - redis_start_time) * 1000
 
     return render_template('views/dashboard.html', data = {
-        'mysql': mysql_latency_ms,
+        'oracle': oracle_latency_ms,
         'redis': redis_latency_ms,
     }, active='dashboard')

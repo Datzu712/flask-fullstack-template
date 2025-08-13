@@ -5,7 +5,7 @@ import jwt
 from werkzeug.exceptions import Forbidden
 
 from ..extensions import db, redis_client
-from ..database.models import User
+from ..database.models import AppUser
 
 def token_required(f):
     @wraps(f)
@@ -19,7 +19,7 @@ def token_required(f):
 
         try:
             data = jwt.decode(token, environ.get('SECRET_KEY'), algorithms=['HS256'])
-            current_user = db.session.query(User).filter_by(id=data['userId']).first()
+            current_user = db.session.query(AppUser).filter_by(id=data['userId']).first()
 
             if not current_user:
                 return jsonify({ 'message': 'Forbidden' }), 403
