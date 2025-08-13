@@ -2,10 +2,12 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
+    "module": "es2022",
+    "target": "es2023",
     "allowJs": true,
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "strict": true,
     "removeComments": true,
     "esModuleInterop": true,
@@ -13,9 +15,15 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@interfaces/*": ["./src/ts/interfaces/*"],
-      "@components/*": ["./src/ts/components/*"],
+      "@interfaces/*": [
+        "./src/ts/interfaces/*"
+      ],
+      "@components/*": [
+        "./src/ts/components/*"
+      ],
     }
   },
-  "include": ["src/ts/**/*.ts"],
+  "include": [
+    "src/ts/**/*.ts"
+  ],
 }

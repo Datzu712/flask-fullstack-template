@@ -75,7 +75,6 @@ function initializeDataTable() {
             },
         ],
         layout: {
-            // @ts-expect-error todo
             top: () => {
                 const div = document.createElement('div');
                 div.innerHTML = `<button type="button" class="btn btn-primary mb-3">Add client</button>`;
