@@ -20,6 +20,6 @@ app_bp.register_blueprint(facilities_bp)
 app_bp.register_blueprint(areas_bp)
 app_bp.register_blueprint(doctors_bp)
 app_bp.register_blueprint(rooms_bp)
+app_bp.register_blueprint(users_bp)
 
 # app_bp.register_blueprint(clients_bp)
-app_bp.register_blueprint(users_bp)

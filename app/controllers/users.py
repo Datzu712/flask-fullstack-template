@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, g
-from werkzeug.exceptions import NotFound
+from flask import Blueprint, render_template
 
 from ..decorators.require_auth import token_required
 

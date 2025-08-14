@@ -6,14 +6,16 @@
     <div class="card">
         <div class="card-body">
             <h3 class="card-title">Users</h3>
-            <table id="users-dt" class="table table-striped table-bordered">
+            <table id="resource-dt" class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Created</th>
-                        <th>Last modification</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th></th>
                     </tr>
                 </thead>
             </table>
@@ -22,58 +24,64 @@
 </div>
 
 <!-- Modal -->
-<!-- <div class="modal fade" id="adduserModal" tabindex="-1" aria-labelledby="adduserModalLabel" aria-hidden="true">
+<div class="modal fade" id="addResourceModal" tabindex="-1" aria-labelledby="addResourceModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Add User</h5>
+                <h5 class="modal-title" id="modalTitle">Add a user</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
             </div>
             <div class="modal-body">
-                <form class="row g-3 needs-validation" id="userForm" method="post" novalidate>
-                    <div class="col-md-4">
-                        <label for="inputName" class="form-label">Name</label>
-                        <input id="inputName" type="text" class="form-control" autocomplete="on" required/>
+                <form class="row g-3 needs-validation" id="resourceForm" novalidate>
+                    <div class="col-md-12">
+                        <label for="inputUsername" class="form-label">Username</label>
+                        <input id="inputUsername" type="text" class="form-control" autocomplete="on" required/>
                         <div class="invalid-feedback">
-                            Palease enter the user name.
+                            Please enter a valid username.
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <label for="inputEmail" class="form-label">Email</label>
                         <input id="inputEmail" type="email" class="form-control" autocomplete="on" required/>
                         <div class="invalid-feedback">
-                            Please enter the user email.
+                            Please enter a valid email.
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <label for="inputRole" class="form-label">Role</label>
-                        <select id="inputRole" class="form-select" required>
+                    <div class="col-md-12 password-field">
+                        <label for="inputPassword" class="form-label">Password</label>
+                        <input id="inputPassword" type="password" class="form-control" autocomplete="new-password" required/>
+                        <div class="invalid-feedback">
+                            Please enter a password.
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="selectRole" class="form-label">Role</label>
+                        <select id="selectRole" class="form-select" required>
                             <option value="admin">Admin</option>
-                            <option value="user">User</option>
+                            <option value="receptionist" selected>Receptionist</option>
+                            <option value="doctor">Doctor</option>
                         </select>
                         <div class="invalid-feedback">
                             Please select a role.
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <label for="inputPassword" class="form-label">Password</label>
-                        <input id="inputPassword" type="password" class="form-control" autocomplete="on" required/>
-                        <div class="invalid-feedback">
-                            Please enter the user password.
+                    <div class="col-md-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="checkActive" checked>
+                            <label class="form-check-label" for="checkActive">
+                                Active
+                            </label>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <label for="inputPassword2" class="form-label
-                        ">Confirm Password</label>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" form="userForm" id="addButton">Save</button>
+                        <button type="submit" class="btn btn-primary" form="resourceForm" id="addButton">Save</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-</div> -->
+</div>
 {% endblock %}
 
 {% block scripts %}
