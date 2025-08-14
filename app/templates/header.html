@@ -33,7 +33,7 @@
                     ><i class="fas fa-door-open fa-fw me-3"></i><span>Rooms</span></a
                     >
                 <!-- Appointments -->
-                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'appointments' else '' }}"
+                <a href="{{ url_for('app.appointments.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'appointments' else '' }}"
                     ><i class="fas fa-calendar-check fa-fw me-3"></i><span>Appointments</span></a
                     >
                 <!-- Users -->

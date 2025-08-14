@@ -1,0 +1,107 @@
+{% extends "base_layout.html" %}
+
+{% block content %}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Appointments</h3>
+            <table id="resource-dt" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Room</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addResourceModal" tabindex="-1" aria-labelledby="addResourceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add an appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="resourceForm" novalidate>
+                    <div class="col-md-6">
+                        <label for="inputPatient" class="form-label">Patient</label>
+                        <select id="inputPatient" class="form-select" required>
+                            <option value="" selected disabled>Choose a patient...</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a patient.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputDoctor" class="form-label">Doctor</label>
+                        <select id="inputDoctor" class="form-select" required>
+                            <option value="" selected disabled>Choose a doctor...</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a doctor.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputRoom" class="form-label">Room</label>
+                        <select id="inputRoom" class="form-select" required>
+                            <option value="" selected disabled>Choose a room...</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a room.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputStatus" class="form-label">Status</label>
+                        <select id="inputStatus" class="form-select" required>
+                            <option value="scheduled" selected>Scheduled</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="canceled">Canceled</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a status.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputStartTime" class="form-label">Start Time</label>
+                        <input type="datetime-local" id="inputStartTime" class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please set a start time.
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="inputEndTime" class="form-label">End Time</label>
+                        <input type="datetime-local" id="inputEndTime" class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please set an end time.
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="inputDescription" class="form-label">Description</label>
+                        <textarea id="inputDescription" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" form="resourceForm" id="addButton">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/appointments.bundle.js') }}"></script>
+{% endblock %}
