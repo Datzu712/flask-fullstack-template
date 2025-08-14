@@ -28,6 +28,9 @@
 - [TypeScript](https://www.typescriptlang.org/)
 - [Sentry](https://sentry.io/welcome/)
 
+### Oracle version
+There is a version with oracle instead of mysql with more views in the branch [oracle-v1](https://github.com/Datzu712/flask-fullstack-template/tree/oracle-v1)!
+
 
 ## Web Application
 - Login/Logout
