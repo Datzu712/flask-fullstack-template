@@ -1,289 +1,304 @@
-// import { Api, DataTable } from 'datatables.net-bs5';
-// import { Modal } from 'bootstrap';
-// import { showErrorToast, showSuccessToast, showConfirmDialog } from '../../components';
+import 'datatables.net-bs5/css/dataTables.bootstrap5.css';
+import 'datatables.net-responsive-bs5';
 
-// type ResourceDataType = {
-//     id: number;
-//     name: string;
-//     description: string;
-//     facility_id: number;
-//     facility: { id: number; name: string };
-//     createdAt: Date;
-//     updatedAt?: Date;
-//     deletedAt?: Date;
-// };
+import DataTable from 'datatables.net-bs5';
+import type { Api } from 'datatables.net-bs5';
+import { Modal } from 'bootstrap';
+import { showErrorModal, showSuccessModal, createQuestion } from '../../components';
 
-// const API_URL = '/api/areas';
-// const API_FACILITIES_URL = '/api/facilities';
+type ResourceDataType = {
+    id: number;
+    name: string;
+    description: string;
+    facility_id: number;
+    facility: { id: number; name: string };
+    createdAt: Date;
+    updatedAt?: Date;
+    deletedAt?: Date;
+};
 
-// const data: ResourceDataType[] = [];
-// let currentEditingData: ResourceDataType | null = null;
-// const form = document.getElementById('resourceForm') as HTMLFormElement;
-// const modalElement = document.getElementById('addResourceModal')!;
-// const facilitySelect = document.getElementById('inputFacility') as HTMLSelectElement;
-// let modal: Modal = {} as Modal;
+const API_URL = '/api/areas';
+const API_FACILITIES_URL = '/api/facilities';
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     modal = new Modal(modalElement, { keyboard: false });
+const data: ResourceDataType[] = [];
+let currentEditingData: ResourceDataType | null = null;
+const form = document.getElementById('resourceForm') as HTMLFormElement;
+const modalElement = document.getElementById('addResourceModal')!;
+const facilitySelect = document.getElementById('inputFacility') as HTMLSelectElement;
+let modal: Modal = {} as Modal;
 
-//     const datatable = initializeDataTable();
-//     loadFacilities();
-//     setupModalEvents();
-//     setupFormSubmit(datatable);
-//     setupTableClickEvents(datatable);
-// });
+document.addEventListener('DOMContentLoaded', () => {
+    modal = new Modal(modalElement, { keyboard: false, backdrop: false });
 
-// function initializeDataTable() {
-//     return new DataTable<ResourceDataType>('#resource-dt', {
-//         ajax: {
-//             dataSrc: 'data',
-//             url: API_URL,
-//         },
-//         responsive: true,
-//         autoWidth: true,
-//         language: {
-//             processing: 'Processing...',
-//             lengthMenu: 'Showing _MENU_ areas',
-//             zeroRecords: 'No areas found',
-//             emptyTable: 'No areas available in this table',
-//             info: 'Showing areas from _START_ to _END_ (of _TOTAL_)',
-//             infoEmpty: 'Empty table',
-//             infoFiltered: '',
-//             search: 'Search:',
-//             loadingRecords: 'Loading...',
-//         },
-//         columns: [
-//             { data: 'name' },
-//             { data: 'description' },
-//             {
-//                 data: 'facility.name',
-//                 defaultContent: 'N/A',
-//             },
-//             {
-//                 data: 'created_at',
-//                 render: (data: string) => new Date(data).toLocaleDateString(),
-//             },
-//             {
-//                 data: 'updated_at',
-//                 defaultContent: '',
-//                 render: (data: string) => (data ? new Date(data).toLocaleDateString() : 'N/A'),
-//             },
-//             {
-//                 orderable: false,
-//                 data: null,
-//                 render: () => `
-//                     <div class="btn-group">
-//                         <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-//                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
-//                         </button>
-//                         <ul class="dropdown-menu dropdown-menu-end">
-//                             <li><button id="editButton" class="dropdown-item">Edit</button></li>
-//                             <li><hr class="dropdown-divider"></li>
-//                             <li><button id="deleteButton" class="dropdown-item">Delete</button></li>
-//                         </ul>
-//                     </div>
-//                 `,
-//                 width: '1%',
-//             },
-//         ],
-//         layout: {
-//             top: () => {
-//                 const addButton = document.createElement('button');
-//                 addButton.type = 'button';
-//                 addButton.className = 'btn btn-primary mb-3';
-//                 addButton.dataset.bsToggle = 'modal';
-//                 addButton.dataset.bsTarget = '#addResourceModal';
-//                 addButton.innerHTML = 'Add Area';
-//                 return addButton;
-//             },
-//         },
-//     });
-// }
+    const datatable = initializeDataTable();
+    loadFacilities();
+    setupModalEvents();
+    setupFormSubmit(datatable);
+    setupTableClickEvents(datatable);
+});
 
-// async function loadFacilities() {
-//     try {
-//         const response = await fetch(API_FACILITIES_URL);
-//         if (!response.ok) {
-//             throw new Error('Failed to fetch facilities');
-//         }
+function initializeDataTable() {
+    return new DataTable<ResourceDataType>('#resource-dt', {
+        ajax: {
+            dataSrc: 'data',
+            url: API_URL,
+        },
+        responsive: true,
+        autoWidth: true,
+        language: {
+            processing: 'Processing...',
+            lengthMenu: 'Showing _MENU_ areas',
+            zeroRecords: 'No areas found',
+            emptyTable: 'No areas available in this table',
+            info: 'Showing areas from _START_ to _END_ (of _TOTAL_)',
+            infoEmpty: 'Empty table',
+            infoFiltered: '',
+            search: 'Search:',
+            loadingRecords: 'Loading...',
+        },
+        columns: [
+            { data: 'name' },
+            { data: 'description' },
+            {
+                data: 'facility.name',
+                defaultContent: 'N/A',
+            },
+            {
+                data: 'created_at',
+                render: (data: string) => new Date(data).toLocaleDateString(),
+            },
+            {
+                data: 'updated_at',
+                defaultContent: '',
+                render: (data: string) => (data ? new Date(data).toLocaleDateString() : 'N/A'),
+            },
+            {
+                orderable: false,
+                data: null,
+                render: () => `
+                    <div class="btn-group">
+                        <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-list"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l11 0" /><path d="M9 12l11 0" /><path d="M9 18l11 0" /><path d="M5 6l0 .01" /><path d="M5 12l0 .01" /><path d="M5 18l0 .01" /></svg>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><button id="editButton" class="dropdown-item">Edit</button></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button id="deleteButton" class="dropdown-item">Delete</button></li>
+                        </ul>
+                    </div>
+                `,
+                width: '1%',
+            },
+        ],
+        layout: {
+            top: () => {
+                const addButton = document.createElement('button');
+                addButton.type = 'button';
+                addButton.className = 'btn btn-primary mb-3';
+                addButton.dataset.bsToggle = 'modal';
+                addButton.dataset.bsTarget = '#addResourceModal';
+                addButton.innerHTML = 'Add Area';
+                return addButton;
+            },
+        },
+    });
+}
 
-//         const { data } = await response.json();
+async function loadFacilities() {
+    try {
+        const response = await fetch(API_FACILITIES_URL);
+        if (!response.ok) {
+            throw new Error('Failed to fetch facilities');
+        }
 
-//         // Clear current options except the placeholder
-//         facilitySelect.innerHTML = '<option value="" selected disabled>Choose a facility...</option>';
+        const { data } = await response.json();
 
-//         // Add new options
-//         data.forEach((facility: { id: number; name: string }) => {
-//             const option = document.createElement('option');
-//             option.value = facility.id.toString();
-//             option.textContent = facility.name;
-//             facilitySelect.appendChild(option);
-//         });
-//     } catch (error) {
-//         console.error('Error loading facilities:', error);
-//         showErrorToast('Failed to load facilities');
-//     }
-// }
+        // Clear current options except the placeholder
+        facilitySelect.innerHTML = '<option value="" selected disabled>Choose a facility...</option>';
 
-// function setupModalEvents() {
-//     modalElement.addEventListener('hidden.bs.modal', () => {
-//         resetForm();
-//         currentEditingData = null;
-//     });
-// }
+        // Add new options
+        data.forEach((facility: { id: number; name: string }) => {
+            const option = document.createElement('option');
+            option.value = facility.id.toString();
+            option.textContent = facility.name;
+            facilitySelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading facilities:', error);
+        showErrorModal('Failed to load facilities');
+    }
+}
 
-// function setupFormSubmit(datatable: Api<ResourceDataType>) {
-//     form.addEventListener('submit', async (event) => {
-//         event.preventDefault();
-//         event.stopPropagation();
+function setupModalEvents() {
+    modalElement.addEventListener('hidden.bs.modal', () => {
+        resetForm();
+        currentEditingData = null;
+        // Limpiar el backdrop manualmente
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+        document.body.classList.remove('modal-open');
+    });
+}
 
-//         if (!form.checkValidity()) {
-//             form.classList.add('was-validated');
-//             return;
-//         }
+function setupFormSubmit(datatable: Api<ResourceDataType>) {
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-//         await handleFormSubmit(datatable);
-//         modal.hide();
-//     });
-// }
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            return;
+        }
 
-// async function handleFormSubmit(datatable: Api<ResourceDataType>) {
-//     const nameInput = document.getElementById('inputName') as HTMLInputElement;
-//     const descriptionInput = document.getElementById('inputDescription') as HTMLTextAreaElement;
-//     const facilityInput = document.getElementById('inputFacility') as HTMLSelectElement;
+        await handleFormSubmit(datatable);
+        form.classList.remove('was-validated');
+        //modal.hide();
+    });
+}
 
-//     const newData = {
-//         name: nameInput.value.trim(),
-//         description: descriptionInput.value.trim(),
-//         facility_id: parseInt(facilityInput.value),
-//     };
+async function handleFormSubmit(datatable: Api<ResourceDataType>) {
+    const nameInput = document.getElementById('inputName') as HTMLInputElement;
+    const descriptionInput = document.getElementById('inputDescription') as HTMLTextAreaElement;
+    const facilityInput = document.getElementById('inputFacility') as HTMLSelectElement;
 
-//     if (currentEditingData && isDataUnchanged(newData)) {
-//         showErrorToast('No changes made');
-//         return;
-//     }
+    const newData = {
+        name: nameInput.value.trim(),
+        description: descriptionInput.value.trim(),
+        facility_id: parseInt(facilityInput.value),
+    };
 
-//     try {
-//         const url = currentEditingData ? `${API_URL}/${currentEditingData.id}` : API_URL;
-//         const method = currentEditingData ? 'PATCH' : 'POST';
+    if (currentEditingData && isDataUnchanged(newData)) {
+        showErrorModal('No changes made');
+        return;
+    }
 
-//         const response = await fetch(url, {
-//             method,
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(newData),
-//         });
+    try {
+        const url = currentEditingData ? `${API_URL}/${currentEditingData.id}` : API_URL;
+        const method = currentEditingData ? 'PATCH' : 'POST';
 
-//         if (!response.ok) {
-//             const data = await response.json();
-//             throw new Error(data.message || 'Failed to save area');
-//         }
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newData),
+        });
 
-//         datatable.ajax.reload();
-//         showSuccessToast(currentEditingData ? 'Area updated successfully' : 'Area created successfully');
-//         resetForm();
-//     } catch (error: any) {
-//         showErrorToast(error.message);
-//     }
-// }
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || 'Failed to save area');
+        }
 
-// function updateData(newData: ResourceDataType, datatable: Api<ResourceDataType>) {
-//     const index = data.findIndex((item) => item.id === newData.id);
-//     if (index !== -1) {
-//         data[index] = newData;
-//     } else {
-//         data.push(newData);
-//     }
-//     datatable.clear().rows.add(data).draw();
-// }
+        datatable.ajax.reload();
+        modal.hide();
+        showSuccessModal(currentEditingData ? 'Area updated successfully' : 'Area created successfully');
+        resetForm();
+    } catch (error: any) {
+        showErrorModal(error.message);
+    }
+}
 
-// function isDataUnchanged(newData: Partial<ResourceDataType>) {
-//     if (!currentEditingData) return false;
+function updateData(newData: ResourceDataType, datatable: Api<ResourceDataType>) {
+    const index = data.findIndex((item) => item.id === newData.id);
+    if (index !== -1) {
+        data[index] = newData;
+    } else {
+        data.push(newData);
+    }
+    datatable.clear().rows.add(data).draw();
+}
 
-//     return (
-//         newData.name === currentEditingData.name &&
-//         newData.description === currentEditingData.description &&
-//         newData.facility_id === currentEditingData.facility_id
-//     );
-// }
+function isDataUnchanged(newData: Partial<ResourceDataType>) {
+    if (!currentEditingData) return false;
 
-// function setupTableClickEvents(datatable: Api<ResourceDataType>) {
-//     document.querySelector('#resource-dt tbody')?.addEventListener('click', (event) => {
-//         const target = event.target as HTMLElement;
-//         const button = target.closest('button');
-//         if (!button) return;
+    return (
+        newData.name === currentEditingData.name &&
+        newData.description === currentEditingData.description &&
+        newData.facility_id === currentEditingData.facility_id
+    );
+}
 
-//         const tr = target.closest('tr');
-//         if (!tr) return;
+function setupTableClickEvents(datatable: Api<ResourceDataType>) {
+    document.querySelector('#resource-dt tbody')?.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        const button = target.closest('button');
+        if (!button) return;
 
-//         const rowData = datatable.row(tr).data();
-//         if (!rowData) return;
+        const tr = target.closest('tr');
+        if (!tr) return;
 
-//         if (button.id === 'editButton') {
-//             handleEditButtonClick(rowData);
-//         } else if (button.id === 'deleteButton') {
-//             handleDeleteButtonClick(rowData, datatable);
-//         }
-//     });
-// }
+        const rowData = datatable.row(tr).data();
+        if (!rowData) return;
 
-// function handleEditButtonClick(editedData: ResourceDataType) {
-//     currentEditingData = editedData;
+        if (button.id === 'editButton') {
+            handleEditButtonClick(rowData);
+        } else if (button.id === 'deleteButton') {
+            handleDeleteButtonClick(rowData, datatable);
+        }
+    });
+}
 
-//     const nameInput = document.getElementById('inputName') as HTMLInputElement;
-//     const descriptionInput = document.getElementById('inputDescription') as HTMLTextAreaElement;
-//     const facilityInput = document.getElementById('inputFacility') as HTMLSelectElement;
-//     const modalTitle = document.getElementById('modalTitle') as HTMLElement;
-//     const addButton = document.getElementById('addButton') as HTMLButtonElement;
+function handleEditButtonClick(editedData: ResourceDataType) {
+    currentEditingData = editedData;
 
-//     nameInput.value = editedData.name;
-//     descriptionInput.value = editedData.description;
-//     facilityInput.value = editedData.facility_id.toString();
+    const nameInput = document.getElementById('inputName') as HTMLInputElement;
+    const descriptionInput = document.getElementById('inputDescription') as HTMLTextAreaElement;
+    const facilityInput = document.getElementById('inputFacility') as HTMLSelectElement;
+    const modalTitle = document.getElementById('modalTitle') as HTMLElement;
+    const addButton = document.getElementById('addButton') as HTMLButtonElement;
 
-//     modalTitle.textContent = 'Edit area';
-//     addButton.textContent = 'Update';
+    nameInput.value = editedData.name;
+    descriptionInput.value = editedData.description;
+    facilityInput.value = editedData.facility_id.toString();
 
-//     modal.show();
-// }
+    modalTitle.textContent = 'Edit area';
+    addButton.textContent = 'Update';
 
-// function handleDeleteButtonClick(targetData: ResourceDataType, datatable: Api<ResourceDataType>) {
-//     showConfirmDialog('Delete area', 'Are you sure you want to delete this area?', async () => {
-//         try {
-//             await deleteResource(targetData.id, datatable);
-//             showSuccessToast('Area deleted successfully');
-//         } catch (error: any) {
-//             showErrorToast(error.message);
-//         }
-//     });
-// }
+    modal.show();
+}
 
-// async function deleteResource(dataId: number, datatable: Api<ResourceDataType>) {
-//     const response = await fetch(`${API_URL}/${dataId}`, {
-//         method: 'DELETE',
-//     });
+function handleDeleteButtonClick(targetData: ResourceDataType, datatable: Api<ResourceDataType>) {
+    createQuestion({
+        title: 'Delete area',
+        text: `Are you sure you want to delete the area "${targetData.name}"? This action cannot be undone.`,
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: 'danger',
+        afterConfirm: async () => {
+            await deleteResource(targetData.id, datatable);
+            showSuccessModal('Area deleted successfully');
+        },
+    });
+}
 
-//     if (!response.ok) {
-//         const data = await response.json();
-//         throw new Error(data.message || 'Failed to delete area');
-//     }
+async function deleteResource(dataId: number, datatable: Api<ResourceDataType>) {
+    const response = await fetch(`${API_URL}/${dataId}`, {
+        method: 'DELETE',
+    });
 
-//     datatable.ajax.reload();
-// }
+    if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to delete area');
+    }
 
-// function resetForm() {
-//     const nameInput = document.getElementById('inputName') as HTMLInputElement;
-//     const descriptionInput = document.getElementById('inputDescription') as HTMLTextAreaElement;
-//     const facilityInput = document.getElementById('inputFacility') as HTMLSelectElement;
-//     const modalTitle = document.getElementById('modalTitle') as HTMLElement;
-//     const addButton = document.getElementById('addButton') as HTMLButtonElement;
+    datatable.ajax.reload();
+}
 
-//     nameInput.value = '';
-//     descriptionInput.value = '';
-//     facilityInput.value = '';
+function resetForm() {
+    const nameInput = document.getElementById('inputName') as HTMLInputElement;
+    const descriptionInput = document.getElementById('inputDescription') as HTMLTextAreaElement;
+    const facilityInput = document.getElementById('inputFacility') as HTMLSelectElement;
+    const modalTitle = document.getElementById('modalTitle') as HTMLElement;
+    const addButton = document.getElementById('addButton') as HTMLButtonElement;
 
-//     modalTitle.textContent = 'Add an area';
-//     addButton.textContent = 'Save';
+    nameInput.value = '';
+    descriptionInput.value = '';
+    facilityInput.value = '';
 
-//     form.classList.remove('was-validated');
-// }
+    modalTitle.textContent = 'Add an area';
+    addButton.textContent = 'Save';
+
+    form.classList.remove('was-validated');
+}

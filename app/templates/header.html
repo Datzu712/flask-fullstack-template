@@ -25,11 +25,11 @@
                     ><i class="fas fa-th-large fa-fw me-3"></i><span>Areas</span></a
                     >
                 <!-- Doctors -->
-                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'doctors' else '' }}"
+                <a href="{{ url_for('app.doctors.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'doctors' else '' }}"
                     ><i class="fas fa-user-md fa-fw me-3"></i><span>Doctors</span></a
                     >
                 <!-- Rooms -->
-                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'rooms' else '' }}"
+                <a href="{{ url_for('app.rooms.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'rooms' else '' }}"
                     ><i class="fas fa-door-open fa-fw me-3"></i><span>Rooms</span></a
                     >
                 <!-- Appointments -->
@@ -37,7 +37,7 @@
                     ><i class="fas fa-calendar-check fa-fw me-3"></i><span>Appointments</span></a
                     >
                 <!-- Users -->
-                <a href="#" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'users' else '' }}"
+                <a href="{{ url_for('app.users.view') }}" class="list-group-item list-group-item-action py-2 ripple {{ 'active' if active == 'users' else '' }}"
                     ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
                     >
             </div>

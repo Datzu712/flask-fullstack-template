@@ -113,6 +113,23 @@ class Patient(Base):
 class Area(Base):
     __tablename__ = 'area'
     __table_args__ = (
+        PrimaryKeyConstraint('id', name='area_pk'),
+        Index('area_facility_name_uindex', 'name', 'facility_id', unique=True),
+    )
+
+    id: Mapped[float] = mapped_column(NUMBER(asdecimal=False), Identity(on_null=False, start=1, increment=1, minvalue=1, maxvalue=9999999999999999999999999999, cycle=False, cache=20, order=False), primary_key=True)
+    name: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
+    description: Mapped[str] = mapped_column(VARCHAR(320), nullable=False)
+    facility_id: Mapped[float] = mapped_column(NUMBER(asdecimal=False))
+    created_at: Mapped[Optional[datetime.datetime]] = mapped_column(TIMESTAMP, server_default=text('SYSTIMESTAMP'))
+    updated_at: Mapped[Optional[datetime.datetime]] = mapped_column(TIMESTAMP)
+    deleted_at: Mapped[Optional[datetime.datetime]] = mapped_column(TIMESTAMP)
+
+    facility = relationship('Facility', back_populates='area', foreign_keys=[facility_id])
+    doctor = relationship('Doctor', secondary='doctor_facility', back_populates='area')
+    room = relationship('Room', back_populates='area')
+    __tablename__ = 'area'
+    __table_args__ = (
         ForeignKeyConstraint(['facility_id'], ['facility.id'], name='area_facility_id_fk'),
         PrimaryKeyConstraint('id', name='area_pk')
     )
@@ -141,6 +158,19 @@ t_doctor_facility = Table(
 
 
 class Room(Base):
+    __tablename__ = 'room'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='room_pk'),
+    )
+
+    id: Mapped[float] = mapped_column(NUMBER(asdecimal=False), Identity(on_null=False, start=1, increment=1, minvalue=1, maxvalue=9999999999999999999999999999, cycle=False, cache=20, order=False), primary_key=True)
+    name: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
+    description: Mapped[str] = mapped_column(VARCHAR(300), nullable=False)
+    area_id: Mapped[float] = mapped_column(NUMBER(asdecimal=False), nullable=False)
+    created_at: Mapped[Optional[datetime.datetime]] = mapped_column(TIMESTAMP, server_default=text('SYSTIMESTAMP'))
+    deleted_at: Mapped[Optional[datetime.datetime]] = mapped_column(TIMESTAMP)
+
+    area = relationship('Area', back_populates='room', foreign_keys=[area_id])
     __tablename__ = 'room'
     __table_args__ = (
         ForeignKeyConstraint(['area_id'], ['area.id'], ondelete='CASCADE', name='room_area_id_fk'),
