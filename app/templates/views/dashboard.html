@@ -2,10 +2,186 @@
 
 {% block content %}
 
-<div class="container mt-4">
-    <h1>Bienvenido al dashboard {{ g.current_user.username }}</h1>
-    <p>Oracle Latency: {{ data.oracle }}ms</p>
-    <p>Redis Latency: {{ data.redis }}ms</p>
+<div class="container-fluid py-4">
+    <!-- Welcome Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white shadow-lg">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="display-5 fw-bold">¡Bienvenido, {{ g.current_user.username }}!</h2>
+                            <p class="lead mb-0">Panel de administración de la base de datos</p>
+                        </div>
+                        <div class="text-end">
+                            <i class="fas fa-user-circle fa-4x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3">Estado del Sistema</h4>
+        </div>
+        <!-- Oracle Status Card -->
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card border-0 shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1 text-primary">
+                                Oracle Latencia
+                            </div>
+                            <div class="h3 mb-0 font-weight-bold">
+                                {{ data.oracle }} <small class="text-muted">ms</small>
+                            </div>
+                            <div class="mt-2">
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                         style="width: {{ (data.oracle / 100) * 100 if data.oracle < 100 else 100 }}%" 
+                                         aria-valuenow="{{ data.oracle }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-database fa-2x text-primary-lighter"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Redis Status Card -->
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card border-0 shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1 text-danger">
+                                Redis Latencia
+                            </div>
+                            <div class="h3 mb-0 font-weight-bold">
+                                {{ data.redis }} <small class="text-muted">ms</small>
+                            </div>
+                            <div class="mt-2">
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-danger" role="progressbar" 
+                                         style="width: {{ (data.redis / 100) * 100 if data.redis < 100 else 100 }}%" 
+                                         aria-valuenow="{{ data.redis }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-bolt fa-2x text-danger-lighter"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health Card -->
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card border-0 shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1 text-success">
+                                Estado General
+                            </div>
+                            <div class="h3 mb-0 font-weight-bold text-success">
+                                Óptimo
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Access Section -->
+    <div class="row">
+        <div class="col-12">
+            <h4 class="mb-3">Acceso Rápido</h4>
+        </div>
+        <!-- Patients Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Pacientes</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Gestionar</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-injured fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                    <a href="#" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctors Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Doctores</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Gestionar</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-md fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                    <a href="#" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Citas</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Gestionar</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                    <a href="#" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Areas Card -->
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Áreas</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Gestionar</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hospital fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                    <a href="#" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
